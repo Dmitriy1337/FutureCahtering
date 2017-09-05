@@ -76,7 +76,7 @@ public class MainGUI extends Application {
 	
 	public void showRestaurantInfo(Stage st2){
 		
-		Image demoPhoto = new Image("photo.png");
+		Image demoPhoto = new Image("noPhoto.png");
 		
 		Image demoLogo = new Image("logo.png");
 		ImageView photoIV = new ImageView(demoPhoto);
@@ -106,8 +106,75 @@ public class MainGUI extends Application {
 		rDescription.setFont(Font.font ("Verdana", 17));
 		
 		
+		Label rAdress = new Label(newRSample.getRestaurantAdress());
+		rAdress.setLayoutX(180);
+		rAdress.setLayoutY(195);
+		rAdress.setFont(Font.font ("Verdana", 15));
+		Image cell = new Image("191.png");
+		
+		ImageView cellIcon = new ImageView(cell);
+		cellIcon.setLayoutX(180);
+		cellIcon.setLayoutY(220);
+		cellIcon.setFitHeight(20);
+		cellIcon.setFitWidth(20);
+		Label rNumber = new Label(" "+newRSample.getRestaurantNumber());
+		rNumber.setLayoutX(200);
+		rNumber.setLayoutY(220);
+		rNumber.setFont(Font.font ("Verdana", 15));
+		
+		Image vk= new Image("25684.png");
+		
+		ImageView vkIcon = new ImageView(vk);
+		vkIcon.setLayoutX(180);
+		vkIcon.setLayoutY(245);
+		vkIcon.setFitHeight(20);
+		vkIcon.setFitWidth(20);
+		Label rVk = new Label(" "+newRSample.getRestaurantVk());
+		rVk.setLayoutX(200);
+		rVk.setLayoutY(245);
+		rVk.setFont(Font.font ("Verdana", 15));
+		
+		Image inst= new Image("174855.png");
+		
+		ImageView instIcon = new ImageView(inst);
+		instIcon.setLayoutX(180);
+		instIcon.setLayoutY(265);
+		instIcon.setFitHeight(20);
+		instIcon.setFitWidth(20);
+		Label rInst = new Label(" "+newRSample.getRestaurantInst());
+		rInst.setLayoutX(200);
+		rInst.setLayoutY(265);
+		rInst.setFont(Font.font ("Verdana", 15));
+		
+		Image fb= new Image("1600.png");
+		
+		ImageView fbIcon = new ImageView(fb);
+		fbIcon.setLayoutX(180);
+		fbIcon.setLayoutY(287);
+		fbIcon.setFitHeight(18);
+		fbIcon.setFitWidth(18);
+		Label rFb = new Label(" "+newRSample.getRestaurantFb());
+		rFb.setLayoutX(200);
+		rFb.setLayoutY(287);
+		rFb.setFont(Font.font ("Verdana", 15));
+		
+		
+		Image tw= new Image("vector-twitter-icon-195.jpg");
+		
+		ImageView twIcon = new ImageView(tw);
+		twIcon.setLayoutX(180);
+		twIcon.setLayoutY(305);
+		twIcon.setFitHeight(18);
+		twIcon.setFitWidth(18);
+		Label rTw = new Label(" "+newRSample.getRestaurantTwitter());
+		rTw.setLayoutX(200);
+		rTw.setLayoutY(305);
+		rTw.setFont(Font.font ("Verdana", 15));
+		
+		
+		
 		restaurantInfoWindow = new AnchorPane();
-		restaurantInfoWindow.getChildren().addAll(list,photoIV,rName,rSlogan,rDescription);
+		restaurantInfoWindow.getChildren().addAll(list,photoIV,rName,rSlogan,rDescription,rAdress,rNumber,cellIcon,vkIcon,rVk,instIcon,rInst,fbIcon,rFb,twIcon,rTw);
 		mainScene.setRoot(restaurantInfoWindow);
 		st2.setScene(mainScene);
 		st2.show();
