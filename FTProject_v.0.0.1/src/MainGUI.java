@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -29,7 +30,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -40,6 +47,8 @@ import javafx.util.Callback;
 
 public class MainGUI extends Application {
 	Image demoPhoto;
+	String imagepath;
+	GridPane changePane;
 	Image demoLogo;
 	Restaurant newRSample;
 	AnchorPane restaurantInfo;
@@ -164,6 +173,18 @@ public void setColumns(){
 		bGroup.getChildren().add(conditionB);
 		bGroup.getChildren().add(aboutUsB);
 		
+		for(int i = 0;i<bGroup.getChildren().size();i++){
+			int j = i;
+			bGroup.getChildren().get(i).setOnMouseClicked(action->{
+			
+			Button b= (Button) bGroup.getChildren().get(j);
+			changePane.getChildren().clear();
+			setButtonInfo(changePane,b,st);
+			
+			
+			
+		});
+		}
 		orderB.setLayoutY(menuB.getLayoutY()+50);
 		conditionB.setLayoutY(orderB.getLayoutY()+50);
 		aboutUsB.setLayoutY(conditionB.getLayoutY()+50);
@@ -204,15 +225,90 @@ public void setColumns(){
 			});	
 		}
 		
+		 changePane = new GridPane();
 		
-		showVisualPane.getChildren().addAll(list,planshetIV,planshetScene);
+		 changePane.setPadding(new Insets(10));
+		changePane.setHgap(0);
+		changePane.setVgap(0);
+	 
+		
+		
+		SubScene nodeChangeScene= new SubScene(changePane,400,510);//(Button b)
+		nodeChangeScene.setLayoutX(550);
+		nodeChangeScene.setLayoutY(70);
+		changePane.setStyle("-fx-background-color:#ffffff; -fx-border-color: #000000;-fx-border-width: 3px;");
+		
+		
+		
+		showVisualPane.getChildren().addAll(list,planshetIV,planshetScene,nodeChangeScene);
 		mainScene.setRoot(showVisualPane);
 		st.setScene(mainScene);
 		st.show();
 		
 	}
 	
+	public void setButtonInfo(GridPane root,Button b,Stage st){
+		ArrayList<Label>labels = new ArrayList<Label>();
+		
+		Label buttonNameInfo = new Label("Кнопка "+"«"+b.getText()+"»");
+		labels.add(buttonNameInfo);
+		buttonNameInfo.setFont(Font.font ("Verdana", 15));
+		ArrayList<String>buttonD = new ArrayList<String>();
+		buttonD.add("При нажатии пользователь переходит в раздел меню, где отображается полный каталог товаров.");
+		buttonD.add("При нажатии пользователю предоставляется информация о выбранных блюдах. Здесь пользователь может сделать заказ.");
+		buttonD.add("При нажатии пользователю предоставляется информация о состоянии его заказа.");
+		buttonD.add("При нажатии пользователю предоставляется информация о заведении.");
+		
+		Label buttonDescription= new Label();
+		buttonDescription.setMaxWidth(380);
+		buttonDescription.setWrapText(true);
+		
+		if(b.getText().equals("Меню")){
+			buttonDescription.setText(buttonD.get(0));
+			
+		}
+		if(b.getText().equals("Ваш Заказ")){
+			buttonDescription.setText(buttonD.get(1));
+			
+		}
+		if(b.getText().equals("Состояние заказа")){
+			buttonDescription.setText(buttonD.get(2));
 	
+		}
+		if(b.getText().equals("О нас")){
+	
+			buttonDescription.setText(buttonD.get(3));
+		}
+		labels.add(buttonDescription);
+		buttonDescription.setFont(Font.font ("Verdana", 12));
+		
+		
+		Label buttonBgImage  = new Label("Фоновое изображение кнопки"+System.lineSeparator() +"(130x40): ");
+		
+		buttonBgImage.setFont(Font.font ("Verdana", 12));
+		
+		Button chooseBg = new Button("Выбрать");
+		chooseBg.setPrefHeight(25);
+		chooseBg.setPrefWidth(130);
+		chooseBg.setOnAction(action->{
+
+			
+			chooseImage(st,b);
+			
+			
+		});
+		
+		
+		GridPane.setHalignment(buttonNameInfo, HPos.LEFT);
+		GridPane.setHalignment(buttonDescription, HPos.LEFT);
+		GridPane.setHalignment(chooseBg, HPos.RIGHT);
+		GridPane.setMargin(buttonBgImage, new Insets(20,0,0,10));
+		GridPane.setMargin(chooseBg, new Insets(20,0,0,0));
+		root.add(buttonNameInfo, 0, 1,2,1);
+		root.add(buttonDescription, 0, 2,2,1);
+		root.add(buttonBgImage, 0, 3,1,1);
+		root.add(chooseBg, 1, 3,1,1);
+	}
 	
 	
 	
@@ -228,6 +324,32 @@ public void setColumns(){
 		if(args.replaceAll(" ","").equals("Визуализацияменю")){ 
 			showVisualMenu(st);
 			}
+	}
+	
+	public void chooseImage(Stage stage,Button b){
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Choose Image");
+		configureFileChooser(fileChooser);
+		 Platform.runLater(new Runnable() {
+	            @Override public void run() {
+	            	File file = fileChooser.showOpenDialog(stage);
+	            	
+					try {
+						imagepath = file.toURI().toURL().toString();
+						getImage = new Image( imagepath);
+					
+						sL.logN("/"+getImage.toString());
+					} catch (MalformedURLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					BackgroundImage backgroundImage = new BackgroundImage( getImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+					
+					Background background = new Background(backgroundImage);
+					
+					b.setBackground(background);
+	            
+	            }});
 	}
 	
 	
