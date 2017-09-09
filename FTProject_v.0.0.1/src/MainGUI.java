@@ -1,3 +1,4 @@
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -5,6 +6,7 @@ import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -26,6 +29,7 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -54,6 +58,9 @@ public class MainGUI extends Application {
 	Label buttonNameInfo;
 	SubScene nodeChangeScene;
 	Label buttonDescription;
+	TextField tSize;
+	ChoiceBox<String> chooseFont;
+	Label setTextFont;
 	Button chooseBg;
 	boolean isPr = false;
 	boolean isPr2 = false;
@@ -74,7 +81,7 @@ public class MainGUI extends Application {
 	AnchorPane table; 
 	 ArrayList<String>buttonD;
 	AnchorPane dial; 
-	
+	 String[] fontList;
 	Scene dishes; 
 	
 	Dialog dialog; 
@@ -96,6 +103,10 @@ public class MainGUI extends Application {
 		
 		 demoLogo = new Image("logo.png");
 		
+		 fontList = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+			
+			
+		 
 		 buttonD = new ArrayList<String>();
 			buttonD.add("При нажатии пользователь переходит в раздел меню, где отображается полный каталог товаров.");
 			buttonD.add("При нажатии пользователю предоставляется информация о выбранных блюдах. Здесь пользователь может сделать заказ.");
@@ -330,16 +341,59 @@ public void setColumns(){
 			
 		});
 		
+		if(!isPr2){
+		 setTextFont = new Label("Шрифт и размер"+System.lineSeparator()+" текста кнопки:");
+		}
+		setTextFont.setFont(Font.font ("Verdana", 12));
 		
+		//ArrayList<String >list = new ArrayList<String>();
+		if(!isPr2){
+		chooseFont = new ChoiceBox<String>();
+		}
+		chooseFont.setItems(FXCollections.observableArrayList(fontList  )
+			);
+		chooseFont.setTooltip(new Tooltip("Выберите шрифт"));
+		chooseFont.setPrefWidth(100);
+		
+		
+		ChangeListener<String> changeListener = new ChangeListener<String>() {
+			 
+            @Override
+            public void changed(ObservableValue<? extends String> observable, //
+                    String oldValue, String newValue) {
+               
+                   b.setFont(Font.font (newValue, 12));
+                 sL.logN(newValue+"//"+b.getFont());
+                
+            }
+        };
+		
+        chooseFont.getSelectionModel().selectedItemProperty().addListener(changeListener);
+		
+		tSize = new TextField();
+		tSize.setTooltip(new Tooltip("Выберите размер текста"));
+		tSize.setPrefWidth(20);
+		
+		
+		
+		String value = (String) chooseFont.getValue();
+	
 		GridPane.setHalignment(buttonNameInfo, HPos.LEFT);
 		GridPane.setHalignment(buttonDescription, HPos.LEFT);
 		GridPane.setHalignment(chooseBg, HPos.RIGHT);
+		GridPane.setHalignment(chooseFont, HPos.RIGHT);
 		GridPane.setMargin(buttonBgImage, new Insets(20,0,0,10));
 		GridPane.setMargin(chooseBg, new Insets(20,0,0,0));
+		GridPane.setMargin(setTextFont, new Insets(20,0,0,10));
+		GridPane.setMargin(chooseFont, new Insets(20,0,0,0));
+		GridPane.setMargin(tSize, new Insets(20,0,0,0));
 		changePane.add(buttonNameInfo, 0, 1,2,1);
 		changePane.add(buttonDescription, 0, 2,2,1);
 		changePane.add(buttonBgImage, 0, 3,1,1);
-		changePane.add(chooseBg, 1, 3,1,1);
+		changePane.add(chooseBg, 2, 3,1,1);
+		changePane.add(setTextFont, 0, 4,1,1);
+		changePane.add(chooseFont, 2, 4,1,1);
+		changePane.add(tSize, 1, 4,1,1);
 		isPr2=true;
 	
 	}
