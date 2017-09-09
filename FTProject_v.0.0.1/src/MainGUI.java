@@ -46,9 +46,20 @@ import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
 public class MainGUI extends Application {
+	Button menuB;
+	Button orderB;
+	Button conditionB;
+	Button aboutUsB;
+	Label buttonBgImage;
+	Label buttonNameInfo;
+	SubScene nodeChangeScene;
+	Label buttonDescription;
+	Button chooseBg;
+	boolean isPr = false;
+	boolean isPr2 = false;
 	Image demoPhoto;
 	String imagepath;
-	GridPane changePane;
+	 GridPane changePane;
 	Image demoLogo;
 	Restaurant newRSample;
 	AnchorPane restaurantInfo;
@@ -61,7 +72,7 @@ public class MainGUI extends Application {
 	TableColumn<Dish, String> t1,t2,t3,t4,t5,t6,t7;
 	boolean isReady = false;
 	AnchorPane table; 
-	
+	 ArrayList<String>buttonD;
 	AnchorPane dial; 
 	
 	Scene dishes; 
@@ -85,6 +96,13 @@ public class MainGUI extends Application {
 		
 		 demoLogo = new Image("logo.png");
 		
+		 buttonD = new ArrayList<String>();
+			buttonD.add("При нажатии пользователь переходит в раздел меню, где отображается полный каталог товаров.");
+			buttonD.add("При нажатии пользователю предоставляется информация о выбранных блюдах. Здесь пользователь может сделать заказ.");
+			buttonD.add("При нажатии пользователю предоставляется информация о состоянии его заказа.");
+			buttonD.add("При нажатии пользователю предоставляется информация о заведении.");
+			
+		 
 		newRSample = new Restaurant("Имя_Ресторана","Ресторан_вкусной_еды","Наш ресторан готовит и продает вкусную еду","Ул.Уличная 1","+79780000000","vk.com/name","@instagramacc","facebook","@twitteracc",demoPhoto,demoLogo,imageList);
 		mainWindowStage.setTitle("FutureCathering");
 		restaurantInfo = new AnchorPane();
@@ -149,21 +167,33 @@ public void setColumns(){
 		companySlogan.setLayoutY(companyName.getLayoutY()+40);
 		companyName.setLayoutX(labelHeadGroup.getLayoutX()+20);
 		
-		Button menuB = new Button("Меню");
+		
+		if(!isPr){
+		 menuB = new Button("Меню");
+		}
 		menuB.setPrefHeight(40);
 		menuB.setPrefWidth(130);
 		
-		Button orderB = new Button("Ваш Заказ");
+		if(!isPr){
+		 orderB = new Button("Ваш Заказ");
+		}
 		orderB.setPrefHeight(40);
 		orderB.setPrefWidth(130);
 		
-		Button conditionB = new Button("Состояние заказа");
+		
+		if(!isPr){
+		conditionB = new Button("Состояние заказа");
+		}
 		conditionB.setPrefHeight(40);
 		conditionB.setPrefWidth(130);
 		
-		Button aboutUsB = new Button("О нас");
+		if(!isPr){
+		aboutUsB = new Button("О нас");
+		}
 		aboutUsB.setPrefHeight(40);
 		aboutUsB.setPrefWidth(130);
+	
+		
 		
 		
 		Group bGroup = new Group();
@@ -179,7 +209,7 @@ public void setColumns(){
 			
 			Button b= (Button) bGroup.getChildren().get(j);
 			changePane.getChildren().clear();
-			setButtonInfo(changePane,b,st);
+			setButtonInfo(b,st);
 			
 			
 			
@@ -224,21 +254,22 @@ public void setColumns(){
 				
 			});	
 		}
-		
+		if(!isPr){
 		 changePane = new GridPane();
-		
+		}
 		 changePane.setPadding(new Insets(10));
 		changePane.setHgap(0);
 		changePane.setVgap(0);
 	 
 		
-		
-		SubScene nodeChangeScene= new SubScene(changePane,400,510);//(Button b)
+		if(!isPr){
+		nodeChangeScene= new SubScene(changePane,400,510);//(Button b)
+		}
 		nodeChangeScene.setLayoutX(550);
 		nodeChangeScene.setLayoutY(70);
 		changePane.setStyle("-fx-background-color:#ffffff; -fx-border-color: #000000;-fx-border-width: 3px;");
 		
-		
+		isPr=true;
 		
 		showVisualPane.getChildren().addAll(list,planshetIV,planshetScene,nodeChangeScene);
 		mainScene.setRoot(showVisualPane);
@@ -247,19 +278,18 @@ public void setColumns(){
 		
 	}
 	
-	public void setButtonInfo(GridPane root,Button b,Stage st){
+	public void setButtonInfo(Button b,Stage st){
 		ArrayList<Label>labels = new ArrayList<Label>();
 		
-		Label buttonNameInfo = new Label("Кнопка "+"«"+b.getText()+"»");
+		if(!isPr2){
+		 buttonNameInfo = new Label("Кнопка "+"«"+b.getText()+"»");
+		}
 		labels.add(buttonNameInfo);
 		buttonNameInfo.setFont(Font.font ("Verdana", 15));
-		ArrayList<String>buttonD = new ArrayList<String>();
-		buttonD.add("При нажатии пользователь переходит в раздел меню, где отображается полный каталог товаров.");
-		buttonD.add("При нажатии пользователю предоставляется информация о выбранных блюдах. Здесь пользователь может сделать заказ.");
-		buttonD.add("При нажатии пользователю предоставляется информация о состоянии его заказа.");
-		buttonD.add("При нажатии пользователю предоставляется информация о заведении.");
 		
-		Label buttonDescription= new Label();
+		if(!isPr2){
+		 buttonDescription= new Label();
+		}
 		buttonDescription.setMaxWidth(380);
 		buttonDescription.setWrapText(true);
 		
@@ -282,12 +312,14 @@ public void setColumns(){
 		labels.add(buttonDescription);
 		buttonDescription.setFont(Font.font ("Verdana", 12));
 		
-		
-		Label buttonBgImage  = new Label("Фоновое изображение кнопки"+System.lineSeparator() +"(130x40): ");
-		
+		if(!isPr2){
+		buttonBgImage  = new Label("Фоновое изображение кнопки"+System.lineSeparator() +"(130x40): ");
+		}
 		buttonBgImage.setFont(Font.font ("Verdana", 12));
 		
-		Button chooseBg = new Button("Выбрать");
+		if(!isPr2){
+		chooseBg = new Button("Выбрать");
+		}
 		chooseBg.setPrefHeight(25);
 		chooseBg.setPrefWidth(130);
 		chooseBg.setOnAction(action->{
@@ -304,10 +336,12 @@ public void setColumns(){
 		GridPane.setHalignment(chooseBg, HPos.RIGHT);
 		GridPane.setMargin(buttonBgImage, new Insets(20,0,0,10));
 		GridPane.setMargin(chooseBg, new Insets(20,0,0,0));
-		root.add(buttonNameInfo, 0, 1,2,1);
-		root.add(buttonDescription, 0, 2,2,1);
-		root.add(buttonBgImage, 0, 3,1,1);
-		root.add(chooseBg, 1, 3,1,1);
+		changePane.add(buttonNameInfo, 0, 1,2,1);
+		changePane.add(buttonDescription, 0, 2,2,1);
+		changePane.add(buttonBgImage, 0, 3,1,1);
+		changePane.add(chooseBg, 1, 3,1,1);
+		isPr2=true;
+	
 	}
 	
 	
