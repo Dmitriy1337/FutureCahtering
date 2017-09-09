@@ -1,4 +1,5 @@
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class Restaurant {
 	public String restaurantName;
@@ -12,9 +13,9 @@ public class Restaurant {
 	public String restaurantTwitter;
 	public Image restaurantLogo;
 	public Image restaurantPhoto;
+	public ImageView[]imageList;
 	
-	
-		public Restaurant(String a,String a1,String a2,String a3,String a4,String a5,String a6,String a7,String a8,Image a9,Image a10){
+		public Restaurant(String a,String a1,String a2,String a3,String a4,String a5,String a6,String a7,String a8,Image a9,Image a10,ImageView[]iv){
 			this.restaurantName=a;
 			this.restaurantSlogan=a1;
 			this.restaurantDescription=a2;
@@ -26,11 +27,22 @@ public class Restaurant {
 			this.restaurantTwitter=a8;
 			this.restaurantLogo=a9;
 			this.restaurantPhoto=a10;
-		
+			this.imageList = iv;
 		
 		}
 	
-	public String getRestaurantName(){
+	
+		public ImageView[] getImageList(){
+			
+			return this.imageList;
+		}
+		
+		public void setImageList(ImageView[] iv){
+			
+			this.imageList = iv;
+		}
+		
+		public String getRestaurantName(){
 		
 		return this.restaurantName;
 	}
