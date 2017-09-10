@@ -1,9 +1,7 @@
 import java.awt.GraphicsEnvironment;
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -11,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -22,6 +21,7 @@ import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -43,7 +43,12 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -88,12 +93,28 @@ public class MainGUI extends Application {
 	ImageView[] imageList = new ImageView[4];
 	TableColumn<Dish, String> t1,t2,t3,t4,t5,t6,t7;
 	boolean isReady = false;
+	ColorPicker chooseColor;
 	AnchorPane table; 
 	 ArrayList<String>buttonD;
 	AnchorPane dial; 
 	 String[] fontList;
-	Scene dishes; 
+	 Insets margin;
+	 Label bMargin;
+	Label bMarginTop;
+	Label bMarginBottom;
+	Label bMarginLeft;
+	Label bMarginRight;
+	int a = 0;
+	int bb = 0;
+	int c= 30;
+	int d = 0;
+	TextField tLeft;
+	TextField tRight;
+	TextField tTop;
+	TextField tBottom;
 	
+	Scene dishes; 
+	Label colorLabel;
 	Dialog dialog; 
 	TextArea tx,tx1,tx2,tx3,tx4,tx5,tx6,tx7; 
 	private final TableView<Dish>mainTb = new TableView<Dish>(); 
@@ -257,12 +278,12 @@ public void setColumns(){
 		aboutUsB.setLayoutY(conditionB.getLayoutY()+50);
 		
 		
-		
+		 margin = new Insets(a,bb,c,d);//0,0,30,0
 		BorderPane planshetPane = new BorderPane();
 		BorderPane.setAlignment(labelHeadGroup, Pos.TOP_CENTER);
 		//BorderPane.setAlignment(companyName, Pos.TOP_CENTER);
 		BorderPane.setAlignment(bGroup, Pos.CENTER);
-		
+		BorderPane.setMargin(bGroup, margin);
 		
 		planshetPane.setCenter(bGroup);
 		planshetPane.setTop(labelHeadGroup);
@@ -315,32 +336,6 @@ public void setColumns(){
 		
 	}
 	
-	public void refreshLists(ArrayList<String> bTextFont,ArrayList<Double> bTextSize,Button b){
-		
-		bTextFont.clear();
-		bTextSize.clear();
-		bTextFont.add(menuB.getFont().getName());
-		bTextSize.add(menuB.getFont().getSize());
-		bTextFont.add(orderB.getFont().getName());
-		bTextSize.add(orderB.getFont().getSize());
-		bTextFont.add(conditionB.getFont().getName());
-		bTextSize.add(conditionB.getFont().getSize());
-		bTextFont.add(aboutUsB.getFont().getName());
-		bTextSize.add(aboutUsB.getFont().getSize());
-	
-		sL.logN("font"+orderB.getFont().getName()+"/"+b.getFont().getName());
-		sL.logN("l "+bTextFont.toString());
-	sL.logN("l "+bTextSize.toString());
-	}
-	public void refreshFont(){
-		sL.logN("r "+bTextFont.toString());
-		sL.logN("r "+bTextSize.toString());
-		menuB.setFont(Font.font(bTextFont.get(0), bTextSize.get(0)));
-		orderB.setFont(Font.font(bTextFont.get(1), bTextSize.get(1)));
-		conditionB.setFont(Font.font(bTextFont.get(2), bTextSize.get(2)));
-		aboutUsB.setFont(Font.font(bTextFont.get(3), bTextSize.get(3)));
-		
-	}
 	
 	public void setButtonInfo(Button b,Stage st){
 	 name  = b.getText();
@@ -476,15 +471,15 @@ public void setColumns(){
 	            	  
 	            	   }
 	            	   if(name.equals("Ваш Заказ")){
-	            		   orderB.setFont(Font.font (menuB.getFont().getName(), size));
+	            		   orderB.setFont(Font.font (orderB.getFont().getName(), size));
 	            		  
 	            	   }
 	            	   if(name.equals("Состояние заказа")){
-	            		   conditionB.setFont(Font.font (menuB.getFont().getName(), size));
+	            		   conditionB.setFont(Font.font (conditionB.getFont().getName(), size));
 	            		  
 	            	   }
 	            	   if(name.equals("О нас")){
-	            		   aboutUsB.setFont(Font.font (menuB.getFont().getName(), size));
+	            		   aboutUsB.setFont(Font.font (aboutUsB.getFont().getName(), size));
 	            		  
 	            	   }
 					
@@ -495,24 +490,113 @@ public void setColumns(){
 		
         }
 		
+        if(!isPr2){ 
+        colorLabel= new Label("Цвет текста:");
+        colorLabel.setFont(Font.font ("Verdana", 12));
+        }
+        
+        if(!isPr2){ 
+        chooseColor =new ColorPicker();
+        chooseColor.setOnAction(new EventHandler<ActionEvent>() {
+        	 
+            @Override
+            public void handle(ActionEvent event) {
+            	
+            	
+            	if(name.equals("Меню")){
+            		
+            		menuB.setTextFill(chooseColor.getValue());
+               	   }
+               	   if(name.equals("Ваш Заказ")){
+               		orderB.setTextFill(chooseColor.getValue());
+               	   }
+               	   if(name.equals("Состояние заказа")){
+               		conditionB.setTextFill(chooseColor.getValue());
+               	   }
+               	   if(name.equals("О нас")){
+               		aboutUsB.setTextFill(chooseColor.getValue()); 
+               	   }
+            }
+        });
+        }
        
         
+        if(!isPr2){ 
+        bMargin = new Label("Отступы от краев:");
+        bMarginTop = new Label("Сверху:");
+        bMarginBottom = new Label("Снизу:");
+        bMarginLeft = new Label("Слева:");
+        bMarginRight = new Label("Справа:");
+        
+        ArrayList<TextField>marginTF = new ArrayList<TextField>();
+        tTop = new TextField();
+        tTop.setPrefWidth(15);
+        marginTF.add(tTop) ;      
+        tBottom = new TextField();
+        tBottom.setPrefWidth(15);
+        marginTF.add(tBottom) ;    
+        tLeft = new TextField();
+        tLeft.setPrefWidth(15);
+        marginTF.add(tLeft) ;    
+        tRight = new TextField();
+        tRight.setPrefWidth(15);
+        marginTF.add(tRight) ;    
+       
+        
+        for(int i = 0;i<marginTF.size();i++){
+        	int j = i;
+        	marginTF.get(j).setOnKeyPressed(new EventHandler<KeyEvent>(){
+
+				@Override
+				public void handle(KeyEvent arg0) {
+					if(arg0.getCode() ==KeyCode.ENTER){
+						if(marginTF.get(j).equals(tTop)){
+							a =Integer.parseInt( tTop.getText());
+						}
+						if(marginTF.get(j).equals(tBottom)){
+							c =Integer.parseInt( tBottom.getText());
+						}
+						if(marginTF.get(j).equals(tLeft)){
+							d =Integer.parseInt( tLeft.getText());
+						}
+						if(marginTF.get(j).equals(tRight)){
+							bb =Integer.parseInt( tRight.getText());
+						}
+						
+						
+						
+						
+						Insets in = new Insets(a,bb,c,d);
+						BorderPane.setMargin(bGroup,in);	
+						
+					}
+					
+				}});
+        	
+        }
+        
+        }
+       
         
         if(name.equals("Меню")){
    		 tSize.setText(""+menuB.getFont().getSize());
    		chooseFont.setValue(menuB.getFont().getName());
-   	   }
+   		chooseColor.setValue((Color) menuB.getTextFill());
+        }
    	   if(name.equals("Ваш Заказ")){
    		   tSize.setText(""+orderB.getFont().getSize());
    		chooseFont.setValue(orderB.getFont().getName());
+   		chooseColor.setValue((Color) orderB.getTextFill());
    	   }
    	   if(name.equals("Состояние заказа")){
    		   tSize.setText(""+conditionB.getFont().getSize());
    		chooseFont.setValue(conditionB.getFont().getName());
+   		chooseColor.setValue((Color) conditionB.getTextFill());
    	   }
    	   if(name.equals("О нас")){
    		   tSize.setText(""+aboutUsB.getFont().getSize());
    		chooseFont.setValue(aboutUsB.getFont().getName());
+   		chooseColor.setValue((Color) aboutUsB.getTextFill());
    	   }
 		
 		
@@ -522,11 +606,25 @@ public void setColumns(){
 		GridPane.setHalignment(buttonDescription, HPos.LEFT);
 		GridPane.setHalignment(chooseBg, HPos.RIGHT);
 		GridPane.setHalignment(chooseFont, HPos.RIGHT);
+		GridPane.setHalignment(chooseColor, HPos.RIGHT);
 		GridPane.setMargin(buttonBgImage, new Insets(20,0,0,10));
 		GridPane.setMargin(chooseBg, new Insets(20,0,0,0));
 		GridPane.setMargin(setTextFont, new Insets(20,0,0,10));
+		GridPane.setMargin(colorLabel, new Insets(20,0,0,10));
+		GridPane.setMargin(bMargin, new Insets(20,0,0,10));
 		GridPane.setMargin(chooseFont, new Insets(20,0,0,0));
 		GridPane.setMargin(tSize, new Insets(20,0,0,0));
+		GridPane.setMargin(chooseColor, new Insets(20,0,0,0));
+		GridPane.setMargin(bMarginTop, new Insets(10,0,0,0));
+		GridPane.setMargin(bMarginBottom, new Insets(10,0,0,0));
+		GridPane.setMargin(bMarginLeft, new Insets(10,0,0,0));
+		GridPane.setMargin(bMarginRight, new Insets(10,0,0,0));
+		GridPane.setMargin(tTop, new Insets(10,20,0,20));
+		GridPane.setMargin(tBottom, new Insets(10,20,0,20));
+		GridPane.setMargin(tLeft, new Insets(10,20,0,20));
+		GridPane.setMargin(tRight, new Insets(10,20,0,20));
+		
+		
 		changePane.add(buttonNameInfo, 0, 1,2,1);
 		changePane.add(buttonDescription, 0, 2,2,1);
 		changePane.add(buttonBgImage, 0, 3,1,1);
@@ -534,6 +632,18 @@ public void setColumns(){
 		changePane.add(setTextFont, 0, 4,1,1);
 		changePane.add(chooseFont, 2, 4,1,1);
 		changePane.add(tSize, 1, 4,1,1);
+		changePane.add(colorLabel, 0, 5,1,1);
+		changePane.add(chooseColor, 1, 5,2,1);
+		changePane.add(bMargin, 0, 6,2,1);
+		changePane.add(bMarginTop, 1, 7,2,1);
+		changePane.add(bMarginBottom, 1, 8,2,1);
+		changePane.add(bMarginLeft, 1, 9,2,1);
+		changePane.add(bMarginRight, 1, 10,2,1);
+		changePane.add(tTop, 2, 7,1,1);
+		changePane.add(tBottom, 2, 8,1,1);
+		changePane.add(tLeft, 2, 9,1,1);
+		changePane.add(tRight, 2, 10,1,1);
+		
 		isPr2=true;
 	
 	}
