@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -10,6 +11,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -33,6 +35,8 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -56,10 +60,16 @@ public class MainGUI extends Application {
 	Button aboutUsB;
 	Label buttonBgImage;
 	Label buttonNameInfo;
+	String name ;
 	SubScene nodeChangeScene;
 	Label buttonDescription;
+	double size;
+	Group bGroup;
 	TextField tSize;
+	ArrayList<Double>bTextSize;
+	ArrayList<String>bTextFont;
 	ChoiceBox<String> chooseFont;
+	ChangeListener<String> changeListener;
 	Label setTextFont;
 	Button chooseBg;
 	boolean isPr = false;
@@ -101,6 +111,9 @@ public class MainGUI extends Application {
 	public void start(Stage mainWindowStage) throws Exception {
 		 demoPhoto = new Image("noPhoto.png");
 		
+		 bTextSize = new ArrayList<Double>();
+		 bTextFont = new ArrayList<String>();
+		 
 		 demoLogo = new Image("logo.png");
 		
 		 fontList = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
@@ -181,51 +194,64 @@ public void setColumns(){
 		
 		if(!isPr){
 		 menuB = new Button("Меню");
-		}
-		menuB.setPrefHeight(40);
+		 menuB.setPrefHeight(40);
 		menuB.setPrefWidth(130);
+	
+		menuB.setOnAction(act->{
+			changePane.getChildren().clear();
+			setButtonInfo(menuB,st);
+		});
+		
+		}
+		
 		
 		if(!isPr){
 		 orderB = new Button("Ваш Заказ");
+		 orderB.setPrefHeight(40);
+			orderB.setPrefWidth(130);
+			orderB.setOnAction(act->{
+				changePane.getChildren().clear();
+				setButtonInfo(orderB,st);
+			});
+		
 		}
-		orderB.setPrefHeight(40);
-		orderB.setPrefWidth(130);
 		
 		
 		if(!isPr){
 		conditionB = new Button("Состояние заказа");
-		}
 		conditionB.setPrefHeight(40);
 		conditionB.setPrefWidth(130);
+		conditionB.setOnAction(act->{
+			changePane.getChildren().clear();
+			setButtonInfo(conditionB,st);
+		});
+		}
+		
 		
 		if(!isPr){
 		aboutUsB = new Button("О нас");
-		}
 		aboutUsB.setPrefHeight(40);
 		aboutUsB.setPrefWidth(130);
-	
-		
-		
-		
-		Group bGroup = new Group();
-		bGroup.setStyle("-fx-background-color:#000000");
-		bGroup.getChildren().add(menuB);
-		bGroup.getChildren().add(orderB);
-		bGroup.getChildren().add(conditionB);
-		bGroup.getChildren().add(aboutUsB);
-		
-		for(int i = 0;i<bGroup.getChildren().size();i++){
-			int j = i;
-			bGroup.getChildren().get(i).setOnMouseClicked(action->{
-			
-			Button b= (Button) bGroup.getChildren().get(j);
+		aboutUsB.setOnAction(act->{
 			changePane.getChildren().clear();
-			setButtonInfo(b,st);
-			
-			
-			
+			setButtonInfo(aboutUsB,st);
 		});
 		}
+		
+	
+		
+		if(!isPr){
+		 bGroup = new Group();
+		 bGroup.setStyle("-fx-background-color:#000000");
+			bGroup.getChildren().add(menuB);
+			bGroup.getChildren().add(orderB);
+			bGroup.getChildren().add(conditionB);
+			bGroup.getChildren().add(aboutUsB);
+		}
+		
+		
+		
+		
 		orderB.setLayoutY(menuB.getLayoutY()+50);
 		conditionB.setLayoutY(orderB.getLayoutY()+50);
 		aboutUsB.setLayoutY(conditionB.getLayoutY()+50);
@@ -289,14 +315,55 @@ public void setColumns(){
 		
 	}
 	
+	public void refreshLists(ArrayList<String> bTextFont,ArrayList<Double> bTextSize,Button b){
+		
+		bTextFont.clear();
+		bTextSize.clear();
+		bTextFont.add(menuB.getFont().getName());
+		bTextSize.add(menuB.getFont().getSize());
+		bTextFont.add(orderB.getFont().getName());
+		bTextSize.add(orderB.getFont().getSize());
+		bTextFont.add(conditionB.getFont().getName());
+		bTextSize.add(conditionB.getFont().getSize());
+		bTextFont.add(aboutUsB.getFont().getName());
+		bTextSize.add(aboutUsB.getFont().getSize());
+	
+		sL.logN("font"+orderB.getFont().getName()+"/"+b.getFont().getName());
+		sL.logN("l "+bTextFont.toString());
+	sL.logN("l "+bTextSize.toString());
+	}
+	public void refreshFont(){
+		sL.logN("r "+bTextFont.toString());
+		sL.logN("r "+bTextSize.toString());
+		menuB.setFont(Font.font(bTextFont.get(0), bTextSize.get(0)));
+		orderB.setFont(Font.font(bTextFont.get(1), bTextSize.get(1)));
+		conditionB.setFont(Font.font(bTextFont.get(2), bTextSize.get(2)));
+		aboutUsB.setFont(Font.font(bTextFont.get(3), bTextSize.get(3)));
+		
+	}
+	
 	public void setButtonInfo(Button b,Stage st){
+	 name  = b.getText();
+	
+	 
+	 
+	 
+	 
+	 sL.logN("start "+b.getText());
+		
+		//refreshFont();
+		sL.logN("2");
+		
 		ArrayList<Label>labels = new ArrayList<Label>();
 		
 		if(!isPr2){
 		 buttonNameInfo = new Label("Кнопка "+"«"+b.getText()+"»");
+		 buttonNameInfo.setFont(Font.font ("Verdana", 15));
 		}
 		labels.add(buttonNameInfo);
-		buttonNameInfo.setFont(Font.font ("Verdana", 15));
+		
+		
+		
 		
 		if(!isPr2){
 		 buttonDescription= new Label();
@@ -321,8 +388,9 @@ public void setColumns(){
 			buttonDescription.setText(buttonD.get(3));
 		}
 		labels.add(buttonDescription);
+		if(!isPr2){
 		buttonDescription.setFont(Font.font ("Verdana", 12));
-		
+		}
 		if(!isPr2){
 		buttonBgImage  = new Label("Фоновое изображение кнопки"+System.lineSeparator() +"(130x40): ");
 		}
@@ -343,8 +411,9 @@ public void setColumns(){
 		
 		if(!isPr2){
 		 setTextFont = new Label("Шрифт и размер"+System.lineSeparator()+" текста кнопки:");
+		 setTextFont.setFont(Font.font ("Verdana", 12));
 		}
-		setTextFont.setFont(Font.font ("Verdana", 12));
+		
 		
 		//ArrayList<String >list = new ArrayList<String>();
 		if(!isPr2){
@@ -355,28 +424,99 @@ public void setColumns(){
 		chooseFont.setTooltip(new Tooltip("Выберите шрифт"));
 		chooseFont.setPrefWidth(100);
 		
-		
-		ChangeListener<String> changeListener = new ChangeListener<String>() {
+		if(!isPr2){
+		 changeListener = new ChangeListener<String>() {
 			 
             @Override
             public void changed(ObservableValue<? extends String> observable, //
                     String oldValue, String newValue) {
-               
-                   b.setFont(Font.font (newValue, 12));
-                 sL.logN(newValue+"//"+b.getFont());
-                
+               if(newValue!=null){
+            	   sL.logN(name);
+            	   if(name.equals("Меню")){
+            		  menuB.setFont(Font.font (newValue, 12));
+            	  sL.logN(menuB.getFont().getName());
+            	   }
+            	   if(name.equals("Ваш Заказ")){
+            		   orderB.setFont(Font.font (newValue, 12));
+            		   sL.logN("j "+orderB.getFont().getName());
+            	   }
+            	   if(name.equals("Состояние заказа")){
+            		   conditionB.setFont(Font.font (newValue, 12));
+            		   sL.logN(conditionB.getFont().getName());
+            	   }
+            	   if(name.equals("О нас")){
+            		   aboutUsB.setFont(Font.font (newValue, 12));
+            		   sL.logN(aboutUsB.getFont().getName());
+            	   }
+            	   
+            	   }
+               //  sL.logN(newValue+"//"+b.getFont());
+                // refreshLists(bTextFont,bTextSize,b);
             }
         };
-		
+		}
+        
+        
+        
+        if(!isPr2){
         chooseFont.getSelectionModel().selectedItemProperty().addListener(changeListener);
-		
-		tSize = new TextField();
-		tSize.setTooltip(new Tooltip("Выберите размер текста"));
+        }
+        if(!isPr2){
+        tSize = new TextField();
+        tSize.setTooltip(new Tooltip("Выберите размер текста"));
 		tSize.setPrefWidth(20);
+		tSize.setOnKeyPressed(new EventHandler<KeyEvent>(){
+
+			@Override
+			public void handle(KeyEvent key) {
+				if(key.getCode().equals(KeyCode.ENTER)){
+					size = Double.parseDouble(tSize.getText()) ;
+					if(name.equals("Меню")){
+	            		  menuB.setFont(Font.font (menuB.getFont().getName(),size ));
+	            	  
+	            	   }
+	            	   if(name.equals("Ваш Заказ")){
+	            		   orderB.setFont(Font.font (menuB.getFont().getName(), size));
+	            		  
+	            	   }
+	            	   if(name.equals("Состояние заказа")){
+	            		   conditionB.setFont(Font.font (menuB.getFont().getName(), size));
+	            		  
+	            	   }
+	            	   if(name.equals("О нас")){
+	            		   aboutUsB.setFont(Font.font (menuB.getFont().getName(), size));
+	            		  
+	            	   }
+					
+					
+				}
+				
+			}});
+		
+        }
+		
+       
+        
+        
+        if(name.equals("Меню")){
+   		 tSize.setText(""+menuB.getFont().getSize());
+   		chooseFont.setValue(menuB.getFont().getName());
+   	   }
+   	   if(name.equals("Ваш Заказ")){
+   		   tSize.setText(""+orderB.getFont().getSize());
+   		chooseFont.setValue(orderB.getFont().getName());
+   	   }
+   	   if(name.equals("Состояние заказа")){
+   		   tSize.setText(""+conditionB.getFont().getSize());
+   		chooseFont.setValue(conditionB.getFont().getName());
+   	   }
+   	   if(name.equals("О нас")){
+   		   tSize.setText(""+aboutUsB.getFont().getSize());
+   		chooseFont.setValue(aboutUsB.getFont().getName());
+   	   }
 		
 		
 		
-		String value = (String) chooseFont.getValue();
 	
 		GridPane.setHalignment(buttonNameInfo, HPos.LEFT);
 		GridPane.setHalignment(buttonDescription, HPos.LEFT);
@@ -423,19 +563,23 @@ public void setColumns(){
 	            	File file = fileChooser.showOpenDialog(stage);
 	            	
 					try {
+						if(file!=null){
 						imagepath = file.toURI().toURL().toString();
 						getImage = new Image( imagepath);
 					
 						sL.logN("/"+getImage.toString());
+					
+						BackgroundImage backgroundImage = new BackgroundImage( getImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+						
+						Background background = new Background(backgroundImage);
+						
+						b.setBackground(background);
+						}
 					} catch (MalformedURLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					BackgroundImage backgroundImage = new BackgroundImage( getImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
 					
-					Background background = new Background(backgroundImage);
-					
-					b.setBackground(background);
 	            
 	            }});
 	}
