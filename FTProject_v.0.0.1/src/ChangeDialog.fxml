@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="429.0" prefWidth="289.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+   <children>
+      <ImageView fitHeight="429.0" fitWidth="289.0" layoutX="-1.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+         <image>
+            <Image url="@img/whitebg.png" />
+         </image>
+      </ImageView>
+      <Label contentDisplay="CENTER" layoutX="26.0" styleClass="label-header" text="Редактировать">
+         <font>
+            <Font name="Calibri Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="14.0" layoutY="68.0" text="Название:">
+         <font>
+            <Font name="Calibri Bold" size="13.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="98.0" text="Слоган:">
+         <font>
+            <Font name="Calibri Bold" size="13.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="127.0" text="Телефон:">
+         <font>
+            <Font name="Calibri Bold" size="13.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="157.0" text="Адрес:">
+         <font>
+            <Font name="Calibri Bold" size="13.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="186.0" text="ВКонтакте">
+         <font>
+            <Font name="Calibri Bold" size="13.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="218.0" text="Facebook">
+         <font>
+            <Font name="Calibri Bold" size="13.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="248.0" text="Instagram">
+         <font>
+            <Font name="Calibri Bold" size="13.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="277.0" text="Twitter">
+         <font>
+            <Font name="Calibri Bold" size="13.0" />
+         </font></Label>
+      <TextField fx:id="name" layoutX="123.0" layoutY="62.0" />
+      <TextField fx:id="slogan" layoutX="123.0" layoutY="90.0" />
+      <TextField fx:id="phone" layoutX="123.0" layoutY="119.0" />
+      <TextField fx:id="adress" layoutX="123.0" layoutY="149.0" />
+      <TextField fx:id="vk" layoutX="123.0" layoutY="178.0" />
+      <TextField fx:id="fb" layoutX="123.0" layoutY="210.0" />
+      <TextField fx:id="inst" layoutX="123.0" layoutY="240.0" />
+      <TextField fx:id="twi" layoutX="123.0" layoutY="269.0" />
+      <Button layoutX="85.0" layoutY="388.0" mnemonicParsing="false" onAction="#saveInfo" text="Сохранить" />
+      <Label layoutX="54.0" layoutY="313.0" text="Выберите изображение:">
+         <font>
+            <Font name="Calibri Bold" size="13.0" />
+         </font>
+      </Label>
+      <Button layoutX="92.0" layoutY="345.0" mnemonicParsing="false" onAction="#openImage" text="Открыть" />
+   </children>
+</AnchorPane>

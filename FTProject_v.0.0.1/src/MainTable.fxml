@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1200.0" stylesheets="@img/style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainGUI">
+   <children>
+      <ImageView fitHeight="650.0" fitWidth="1200.0" pickOnBounds="true">
+         <image>
+            <Image url="@img/bg.png" />
+         </image>
+      </ImageView>
+      <TableView fx:id="mainTb" editable="true" layoutX="88.0" layoutY="14.0" prefHeight="462.0" prefWidth="993.0">
+        <columns>
+          <TableColumn fx:id="t1" prefWidth="94.0" resizable="false" text="Название" />
+          <TableColumn fx:id="t2" prefWidth="179.0" resizable="false" text="Описание" />
+            <TableColumn fx:id="t3" prefWidth="98.0" resizable="false" text="Ингредиенты" />
+            <TableColumn fx:id="t4" prefWidth="83.0" resizable="false" text="Категория" />
+            <TableColumn fx:id="t5" prefWidth="183.0" resizable="false" text="Белки/Жиры/Углеводы" />
+            <TableColumn fx:id="t6" prefWidth="47.0" resizable="false" text="Ккал" />
+            <TableColumn fx:id="t7" prefWidth="81.0" resizable="false" text="Цена" />
+            <TableColumn fx:id="t8" prefWidth="114.0" resizable="false" text="Категория(Кар.)" />
+            <TableColumn fx:id="t9" prefWidth="113.0" resizable="false" text="Блюдо(кар.)" />
+        </columns>
+      </TableView>
+      <Button fx:id="add" layoutX="91.0" layoutY="492.0" mnemonicParsing="false" onAction="#Dialog" prefHeight="42.0" prefWidth="145.0" text="Добавить" />
+      <Button layoutX="260.0" layoutY="494.0" mnemonicParsing="false" onAction="#SafeInfo" prefHeight="42.0" prefWidth="141.0" text="Сохранить" />
+   </children>
+</AnchorPane>
