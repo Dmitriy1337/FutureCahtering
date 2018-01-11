@@ -27,11 +27,11 @@
          <font>
             <Font name="Calibri Bold" size="13.0" />
          </font></Label>
-      <Label layoutX="14.0" layoutY="127.0" text="Телефон:">
+      <Label layoutX="14.0" layoutY="127.0" text="Адрес:">
          <font>
             <Font name="Calibri Bold" size="13.0" />
          </font></Label>
-      <Label layoutX="14.0" layoutY="157.0" text="Адрес:">
+      <Label layoutX="14.0" layoutY="157.0" text="Телефон:">
          <font>
             <Font name="Calibri Bold" size="13.0" />
          </font></Label>

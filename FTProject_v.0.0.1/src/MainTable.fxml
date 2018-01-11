@@ -14,20 +14,20 @@
             <Image url="@img/bg.png" />
          </image>
       </ImageView>
-      <TableView fx:id="mainTb" editable="true" layoutX="88.0" layoutY="14.0" prefHeight="462.0" prefWidth="993.0">
+      <TableView fx:id="mainTb" editable="true" layoutX="26.0" layoutY="39.0" prefHeight="462.0" prefWidth="1138.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
         <columns>
-          <TableColumn fx:id="t1" prefWidth="94.0" resizable="false" text="Название" />
-          <TableColumn fx:id="t2" prefWidth="179.0" resizable="false" text="Описание" />
-            <TableColumn fx:id="t3" prefWidth="98.0" resizable="false" text="Ингредиенты" />
-            <TableColumn fx:id="t4" prefWidth="83.0" resizable="false" text="Категория" />
-            <TableColumn fx:id="t5" prefWidth="183.0" resizable="false" text="Белки/Жиры/Углеводы" />
-            <TableColumn fx:id="t6" prefWidth="47.0" resizable="false" text="Ккал" />
-            <TableColumn fx:id="t7" prefWidth="81.0" resizable="false" text="Цена" />
-            <TableColumn fx:id="t8" prefWidth="114.0" resizable="false" text="Категория(Кар.)" />
-            <TableColumn fx:id="t9" prefWidth="113.0" resizable="false" text="Блюдо(кар.)" />
+          <TableColumn fx:id="t1" onEditStart="#addDishDialog" prefWidth="105.0" resizable="false" text="Название" />
+          <TableColumn fx:id="t2" onEditStart="#addDishDialog" prefWidth="188.0" resizable="false" text="Описание" />
+            <TableColumn fx:id="t3" prefWidth="146.0" resizable="false" text="Ингредиенты" />
+            <TableColumn fx:id="t4" prefWidth="136.0" resizable="false" text="Категория" />
+            <TableColumn fx:id="t5" prefWidth="77.0" resizable="false" text="Б/Ж/У" />
+            <TableColumn fx:id="t6" prefWidth="76.0" resizable="false" text="Ккал" />
+            <TableColumn fx:id="t7" prefWidth="90.0" resizable="false" text="Цена" />
+            <TableColumn fx:id="t8" prefWidth="165.0" resizable="false" text="Категория(Изобр.)" />
+            <TableColumn fx:id="t9" prefWidth="154.0" resizable="false" text="Блюдо(Изобр.)" />
         </columns>
       </TableView>
-      <Button fx:id="add" layoutX="91.0" layoutY="492.0" mnemonicParsing="false" onAction="#Dialog" prefHeight="42.0" prefWidth="145.0" text="Добавить" />
-      <Button layoutX="260.0" layoutY="494.0" mnemonicParsing="false" onAction="#SafeInfo" prefHeight="42.0" prefWidth="141.0" text="Сохранить" />
+      <Button fx:id="add" layoutX="26.0" layoutY="525.0" mnemonicParsing="false" onAction="#addDishDialog" prefHeight="42.0" prefWidth="145.0" text="Добавить" />
+      <Button layoutX="192.0" layoutY="525.0" mnemonicParsing="false" onAction="#SafeInfo" prefHeight="42.0" prefWidth="141.0" text="Сохранить" />
    </children>
 </AnchorPane>

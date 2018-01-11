@@ -4,7 +4,11 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -17,7 +21,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.SubScene;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Cell;
 import javafx.scene.control.Label;
@@ -32,25 +36,47 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 public class Controller implements Initializable {
+	
+	static String STATE_WAITING = "Waiting";
+	static String STATE_ORDER = "Order";
+	static String STATE_OFF = "Off";
+	
+	static String ORDER_WAITING = "W";
+	static String ORDER_PREPAIRING = "P";
+	static String ORDER_READY = "R";
+	
 	String imagepath="";;
 	
 	Label obname,obslogan,obadress,obphone,obvk,obfb,obinst,obtwi;
-	
+	int counter2 = 0;;
 	int counter = 0;
 	Cell cell;
-	
+	Cell cell2;
 	boolean isPr = true;
 	boolean isPr2 = true;
 	boolean isPr3 = true;
-	
+	boolean isPr4 = true;
+	boolean isPr5 = true;
 	static AnchorPane visualView=null;
 	static AnchorPane tablePane=null;
+	static AnchorPane stateView=null;
 	@FXML
 	Label descrName;
 	
@@ -63,8 +89,31 @@ public class Controller implements Initializable {
 	Button sendPost;
 	
 	@FXML 
+	ScrollPane planshetPane;
+	
+	
+	@FXML 
+	Button confirmButton;
+	
+	@FXML 
+	Label dName;
+	@FXML 
+	Label dState;
+	@FXML 
+	Label dNumber;
+	@FXML 
+	Circle stateCircle;
+	
+	
+	
+	@FXML 
 	Button changeInfo;
 	
+	@FXML
+	public  ListView<Object> planshetList;
+	int count = 1;
+	
+	 ObservableList<Node> postsL =FXCollections.observableArrayList ();
 	@FXML 
 	 TextField name;
 	@FXML
@@ -147,21 +196,21 @@ public class Controller implements Initializable {
 		
 		Label obname = (Label)mainMenu.getChildren().get(5);
 		Label obslogan = (Label)mainMenu.getChildren().get(6);
-		Label obadress = (Label)mainMenu.getChildren().get(10);
-		Label obphone = (Label)mainMenu.getChildren().get(11);
-		Label obvk = (Label)mainMenu.getChildren().get(12);
-		Label obfb = (Label)mainMenu.getChildren().get(13);
-		Label obinst = (Label)mainMenu.getChildren().get(14);
-		Label obtwi = (Label)mainMenu.getChildren().get(15);
+		Label obadress = (Label)mainMenu.getChildren().get(9);
+		Label obphone = (Label)mainMenu.getChildren().get(10);
+		Label obvk = (Label)mainMenu.getChildren().get(11);
+		Label obfb = (Label)mainMenu.getChildren().get(12);
+		Label obinst = (Label)mainMenu.getChildren().get(13);
+		Label obtwi = (Label)mainMenu.getChildren().get(14);
 		
 		
 		Platform.runLater(new Runnable() {
             @Override public void run() {
             	
-            	obname.setText("   "+name.getText());
-            	obslogan.setText("'"+slogan.getText()+"'");
-        		obadress.setText("Ваш адресс:"+adress.getText());
-        		obphone.setText("Ваш телефон:"+phone.getText());
+            	obname.setText(name.getText());
+            	obslogan.setText(slogan.getText());
+        		obadress.setText("Адрес:"+adress.getText());
+        		obphone.setText("Телефон:"+phone.getText());
         		obvk.setText("ВКонтакте:"+vk.getText());
         		obfb.setText("Facebook:"+fb.getText());
         		obinst.setText("Instagram:"+inst.getText());
@@ -241,12 +290,12 @@ public void chooseImageIV(Stage stage,ImageView iv){
             	System.out.println("//"+mainMenu.getChildren().toString());
             	 obname = (Label)mainMenu.getChildren().get(5);
         		 obslogan = (Label)mainMenu.getChildren().get(6);
-        		 obadress = (Label)mainMenu.getChildren().get(10);
-        		 obphone = (Label)mainMenu.getChildren().get(11);
-        		 obvk = (Label)mainMenu.getChildren().get(12);
-        		 obfb = (Label)mainMenu.getChildren().get(13);
-        		 obinst = (Label)mainMenu.getChildren().get(14);
-        		 obtwi = (Label)mainMenu.getChildren().get(15);
+        		 obadress = (Label)mainMenu.getChildren().get(9);
+        		 obphone = (Label)mainMenu.getChildren().get(10);
+        		 obvk = (Label)mainMenu.getChildren().get(11);
+        		 obfb = (Label)mainMenu.getChildren().get(12);
+        		 obinst = (Label)mainMenu.getChildren().get(13);
+        		 obtwi = (Label)mainMenu.getChildren().get(14);
             	
         		 //System.out.println(dialogPane.getChildren().toString());
         		 TextField obname2 =(TextField)dialogPane.getChildren().get(10);
@@ -300,6 +349,7 @@ public void chooseImageIV(Stage stage,ImageView iv){
 
 	public void removePreview(){
 	AnchorPane ap = (AnchorPane)borderPane.getChildren().get(1);
+	
 	System.out.println("//"+borderPane.getChildren().get(0).toString());
 	borderPane.getChildren().remove(0);
 	
@@ -318,6 +368,9 @@ public void chooseImageIV(Stage stage,ImageView iv){
 			ap.getChildren().remove(ap.getChildren().get(1));
 		ap.getChildren().remove(ap.getChildren().get(1));
 		
+		
+		ListView<String> lv = (ListView<String>)ap.getChildren().get(0);
+		lv.setPrefHeight(75);
 		
 			ap.setPrefHeight(75);
 	}
@@ -346,6 +399,7 @@ public void chooseImageIV(Stage stage,ImageView iv){
 	                    if (item != null) {
 	                    	cell.setPrefWidth(299);
 	                    	cell.setAlignment(Pos.CENTER);
+	                    	
 	                    	if(counter==1){
 	                    		cell.setText("Главная страница");
 	                    	
@@ -394,7 +448,7 @@ public void chooseImageIV(Stage stage,ImageView iv){
 				 listenTopMenu(3);
 			 }
 			 if(newValue.replace(" ", "").equals("Состояниесистемы")){
-			 	
+				 listenTopMenu(4);
 			 }
 					    
 		    }
@@ -442,9 +496,10 @@ public void showVisualPage(){
             try {
 				
             	
-            	
+            	if(isPr4){
             	personOverview = new FXMLLoader().load(stream)  ;
-           
+            	isPr4 = false;
+            	}
             
             } catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -465,7 +520,7 @@ public void showVisualPage(){
 	
 	
 	
-	public void listenTopMenu(int index){
+	public void listenTopMenu(int index) {
 		
 		if(index == 1){
 			
@@ -479,7 +534,14 @@ public void showVisualPage(){
 			showVisualPage();
 		}
 		
-		
+		if(index == 4){
+			try {
+				showStatePage();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		
 	}
@@ -553,43 +615,140 @@ public void showVisualPage(){
 		System.out.println("kk");
 		if(e.getCode().equals(KeyCode.ENTER)){
 		System.out.println("posted");
-		//Button sendPost = (Button)personOverview.getChildren().get(19);
-		TextField enterField = (TextField)mainMenu.getChildren().get(18);
-		Date date = new Date();
-		TextArea log = (TextArea)mainMenu.getChildren().get(19);
-		posts.add(date.toString()+System.lineSeparator()+enterField.getText());
-			String logText = "";
-			for(int i = posts.size()-1;i>=0;i--){
-				logText = logText+System.lineSeparator()+posts.get(i);
-			}
-
-		log.setText(logText);
-		enterField.setText("");
+		
+		
+		
+		ScrollPane scrollPost =(ScrollPane) mainMenu.getChildren().get(15);
+		System.out.println("scrollPost"+scrollPost.getContent().toString());
+		AnchorPane container =(AnchorPane) scrollPost.getContent();//  (ScrollPane) mainMenu.getChildren().get(15);
+		
+		
+		System.out.println("g"+container.getChildren().toString());
+		TextField enterField = (TextField)container.getChildren().get(2);
+		VBox postList = (VBox) container.getChildren().get(3);
+		
+		FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainGUI.class.getResource("Post.fxml"));
+        AnchorPane post;
+		try {
+			post = (AnchorPane) loader.load();
+			 
+	        Label postText =(Label) post.getChildren().get(1);
+	        postText.setText(enterField.getText());
+	        enterField.setText("");
+	        Label postDate =(Label) post.getChildren().get(2);
+	        Date date = new Date();
+	        postDate.setText(date.toString());
+	        
+	        
+	       
+	        postsL.add(post);
+	        Collections.reverse(postsL);
+	        postList.getChildren().setAll(postsL);
+	        Collections.reverse(postsL);
+	       
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+       
+		
+		
 	}
 	}
 	public void addPost(){
-		
 		System.out.println("posted");
-		//Button sendPost = (Button)personOverview.getChildren().get(19);
-		TextField enterField = (TextField)mainMenu.getChildren().get(18);
-		Date date = new Date();
-		TextArea log = (TextArea)mainMenu.getChildren().get(19);
-		posts.add(date.toString()+System.lineSeparator()+enterField.getText());
-			String logText = "";
-			for(int i = 0;i<posts.size();i++){
-				logText = logText+System.lineSeparator()+posts.get(i);
-			}
-
-		log.setText(logText);
 		
+		
+		
+		ScrollPane scrollPost =(ScrollPane) mainMenu.getChildren().get(15);
+		System.out.println("scrollPost"+scrollPost.getContent().toString());
+		AnchorPane container =(AnchorPane) scrollPost.getContent();//  (ScrollPane) mainMenu.getChildren().get(15);
+		
+		
+		System.out.println("g"+container.getChildren().toString());
+		TextArea enterField = (TextArea)container.getChildren().get(2);
+		VBox postList = (VBox) container.getChildren().get(3);
+		
+		FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainGUI.class.getResource("Post.fxml"));
+        AnchorPane post;
+		try {
+			post = (AnchorPane) loader.load();
+			 Date date = new Date();
+	        Label postText =(Label) post.getChildren().get(1);
+	        ImageView bg = (ImageView) post.getChildren().get(0);
+	        postText.setText(enterField.getText());
+	       // postText.setBorder(new Border(new BorderStroke(Color.BLACK, 
+		       //     BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+	       int aa = 0;
+	        
+	        for(int i = 0;i<enterField.getText().length();i++){
+	        	char a = enterField.getText().charAt(i);
+	        	if(a=='\n'){
+	        		aa++;
+	        	}
+	        	
+	        }
+	     System.out.println(aa);
+	        aa++;
+	        postText.setPrefHeight(((enterField.getText().length()/80+1)+aa)*21+20);
+	        post.setPrefHeight(postText.getPrefHeight()+40);
+	        bg.setFitHeight(postText.getPrefHeight()+40);
+	        enterField.setText("");
+	        Label postDate =(Label) post.getChildren().get(2);
+	        AnchorPane.setTopAnchor(postDate,postText.getPrefHeight()-30 );
+	        postDate.setText(date.toString());
+	        
+	        
+	       
+	        postsL.add(post);
+	        Collections.reverse(postsL);
+	        postList.getChildren().setAll(postsL);
+	        Collections.reverse(postsL);
+	       
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+       
+		
+		
+	}
 	
+	
+	public void showStatePage() throws IOException{
+		
+		FXMLLoader loader = new FXMLLoader();
+         loader.setLocation(MainGUI.class.getResource("StateView.fxml"));
+         
+         
+		 
+		if(isPr5){
+		 stateView = (AnchorPane) loader.load();//(AnchorPane) FXMLLoader.load(MainGUI.class.getResource("MainPage.fxml"));
+		isPr5 = false;
+		}   
+         // Помещаем сведения об адресатах в центр корневого макета.
+       System.out.println(borderPane.toString());
+          borderPane.setCenter(stateView);
+          
+       
+			counter = 0;	
+        //  System.out.println(personOverview.getChildren().toString());
+				 
+	 
+	 
+			
+		
+		
 	}
 	
 	
 	public void showMainPage(){
 		
 		 try {
-			 
+			
+			
 	           // loader.setLocation(MainGUI.class.getResource("fxml/MainPage.fxml"));
 			// InputStream stream = getClass().getResourceAsStream("MainTable.fxml");
 			
@@ -643,10 +802,107 @@ public void showVisualPage(){
 		
 	}
 	
+	public void setPlanshetState(){
+			
+		int connNumber = MainGUI.rs.getConnNumber();
+		System.out.println("connNumber "+connNumber);
+		int fPaneNumber=0;
+		if(connNumber%4==0){
+		 fPaneNumber = connNumber/4;
+		}
+		else{
+			fPaneNumber=(connNumber/4)+1;
+			
+		}
+		
+		Image im1 = new Image("img/logomin.png");
+		ImageView iv1 = new ImageView(im1);
+		iv1.setFitHeight(150);
+		iv1.setFitWidth(300);
+		ImageView iv2 = new ImageView(im1);
+		iv2.setFitHeight(150);
+		iv2.setFitWidth(800);
+		
+		Device[][] dList = new Device[4][fPaneNumber];
+		for(int i = 0;i<fPaneNumber;i++){
+			for(int j = 0;j<4;j++){
+				if(i*4+j<connNumber){
+					System.out.println("i"+i+"/"+"j"+j);
+					dList[j][i] = new Device((i*4+j),STATE_WAITING,0,ORDER_WAITING);
+				}
+			}
+			
+		}
+		System.out.println("size"+dList.length);
+		
+		for(int i = 0;i<fPaneNumber;i++){
+			for(int j = 0;j<4;j++){
+				System.out.println("i"+i+"/"+"j"+j);
+				if(i*4+j<connNumber){
+				System.out.print(dList[j][i]+" ");
+				}
+				}
+			System.out.println("");
+		}
+		
+		FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainGUI.class.getResource("DevicePane.fxml"));
+        
+		
+		
+		GridPane devicePane = new GridPane();
+		devicePane.setHgap(20);
+		devicePane.setVgap(20);
+		
+		for(int i = 0;i<fPaneNumber;i++){
+			for(int j = 0;j<4;j++){
+				if(i*4+j<connNumber){
+					AnchorPane device;
+					try {
+						device = (AnchorPane) loader.load();
+						
+						device.setBorder(new Border(new BorderStroke(Color.BLACK, 
+					            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+						Label dName = (Label)device.getChildren().get(0);
+						Label dState = (Label)device.getChildren().get(1);
+						Label dNumber = (Label)device.getChildren().get(2);
+						Circle dCircle = (Circle)device.getChildren().get(3);
+						Button dButton = (Button)device.getChildren().get(4);
+						
+						dName.setText("Устройство № "+dList[j][i].getNumber());
+						dState.setText("Состояние: "+dList[j][i].getState());
+						dNumber.setText("Номер заказа:"+dList[j][i].getOrder()+"/"+dList[j][i].getOrderState());
+						dCircle.setFill(Color.LIME);
+						
+						
+						//device.getChildren().add(new Label(dList[j][i].getState()));
+						devicePane.add(device, j, i, 1, 1);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} ;
+					
+					
+				}
+				
+			}
+			
+		}
+		
+		//devicePane.add(iv1, 0, 0, 1, 1);
+		//devicePane.add(iv2, 1, 0, 1, 1);
+		planshetPane.setContent(devicePane);
+		planshetPane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT
+	           , CornerRadii.EMPTY, Insets.EMPTY)));		
+	}
+	
+	
 	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		
 		
 		if(descrName!=null&&descrText!=null){
 		descrName.setText("Описание продукта. Начало работы.");
@@ -654,6 +910,10 @@ public void showVisualPage(){
 		AnchorPane ap = (AnchorPane)borderPane.getChildren().get(1);
 		RadioButton r1 =(RadioButton)ap.getChildren().get(6) ;
 		r1.setSelected(true);
+		}
+		if(planshetPane!=null){
+		System.out.println("l"+planshetPane);
+		setPlanshetState();
 		}
 		
 		// TODO Auto-generated method stub

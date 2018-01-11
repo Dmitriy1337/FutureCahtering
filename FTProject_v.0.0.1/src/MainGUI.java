@@ -1,15 +1,22 @@
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.ResourceBundle;
 
-import javax.print.DocFlavor.URL;
+import javax.imageio.ImageIO;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,9 +29,9 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -55,9 +62,10 @@ public class MainGUI extends Application implements Initializable{
 	@FXML 
 	private AnchorPane root;
 	
+	AnchorPane dialogPane;
 	
 	int  cc = 0;	
-	
+	static ResServer rs;
 	
 	
 	boolean gg = false;
@@ -154,7 +162,7 @@ public class MainGUI extends Application implements Initializable{
 	
 	public Label lb1;
 	
-	
+	@FXML Label addTest;
 	public Label lb2,lb3,lb4,lb5,lb6,lb7,lb8;
 	public Label td1,td2,td3,td4,td5,td6,td7,td8;
 	@FXML   TableColumn<Dish, String> t1;
@@ -169,6 +177,8 @@ public class MainGUI extends Application implements Initializable{
 	public ListView<Object> ll;
 
 	public ListView<Object> ld;
+	
+	@FXML TitledPane descrField;
 	
 	@FXML TableColumn<Dish, File> t8;
 	@FXML   TableColumn<Dish, File> t9;
@@ -295,6 +305,8 @@ public Label DishName,DishValue,DishDescription,DishIngredients,DishKkal,DishPri
 
 	
 	public void start(Stage mainWindowStage) throws Exception {
+		 rs  = new ResServer();
+	    rs.start(ResServer.classStage);
 		mainWindowStage.setResizable(false);
 		showPreview(mainWindowStage);
 		
@@ -327,7 +339,8 @@ public Label DishName,DishValue,DishDescription,DishIngredients,DishKkal,DishPri
 	
 	public void setColumns(){
 	mainTb.getColumns().addAll(t1,t2,t3,t4,t5,t6,t7);
-}
+
+	}
 	
 	
 	public void listenMenu(String args,Stage st){
@@ -391,10 +404,158 @@ public void showCategoriesAndDishes(ActionEvent event) throws IOException{//откр
 
 
 
-public void Dialog(ActionEvent event)throws IOException{
+	public void addDishDialog(ActionEvent event)throws IOException{
+		HashSet noDuplicateCateg= new HashSet(dhRef);
+		ObservableList<String> categories =    FXCollections.observableArrayList();
+		categories.addAll(noDuplicateCateg);
+		//categories.
+	    try {
+	    	FXMLLoader loader = new FXMLLoader();
+		    loader.setLocation(MainGUI.class.getResource("AddDishWindow.fxml"));
+	   		dialogPane = (AnchorPane) loader.load();
+	   		System.out.println(dialogPane.getChildren().toString());
+	   		
+	   		Stage adDishStage = new Stage();
+	   		adDishStage.initStyle(StageStyle.UNDECORATED);
+	   		Scene addDishScene = new Scene(dialogPane);
+	   		
+	   		TextField name=(TextField)dialogPane.getChildren().get(13);
+	   		descrField = (TitledPane)dialogPane.getChildren().get(14);
+	   		TextField category=(TextField)dialogPane.getChildren().get(15);
+	   		TextField ingridients=(TextField)dialogPane.getChildren().get(16);
+	   		TextField b=(TextField)dialogPane.getChildren().get(17);
+	   		TextField j=(TextField)dialogPane.getChildren().get(18);
+	   		TextField u=(TextField)dialogPane.getChildren().get(19);
+	   		TextField calories=(TextField)dialogPane.getChildren().get(20);
+	   		TextField price=(TextField)dialogPane.getChildren().get(21);
+	   		ImageView dishImage = (ImageView)dialogPane.getChildren().get(22);
+	   		ImageView categoryImage = (ImageView)dialogPane.getChildren().get(23);
+	   		Button ok = (Button)dialogPane.getChildren().get(24);
+	   		ComboBox comboBox = (ComboBox)dialogPane.getChildren().get(25);
+	   		ImageView exit = (ImageView)dialogPane.getChildren().get(26);
+	   		Image enteredI = new Image("img/animationcb.png");
+	   		Image exitedI = new Image("img/cb.png");
+	   		exit.setOnMouseEntered(a->{
+	   			exit.setImage(enteredI);	
+	   			
+	   		});
+	   		exit.setOnMouseExited(a->{
+	   			
+	   			exit.setImage(exitedI);	
+	   		});
+	   		exit.setOnMouseClicked(t->{
+	   			adDishStage.close();
+	   			
+	   		});
+	   		comboBox.setItems(categories);
+	   		
+	   		comboBox.valueProperty().addListener(new ChangeListener<String>() {
+	            @Override 
+	            public void changed(ObservableValue ov, String t, String choose) {                
+	               
+	            	int n = dhRef.indexOf(choose);
+	            	category.setText(choose);
+	            	
+	            	//BufferedImage i =ImageIO.read(categIm.get(n));
+	            	
+	            	try {
+						categoryImage.setImage(createImage(dishIm.get(n)));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	            	
+	            	System.out.println(ov+"/"+t+"/"+choose);          
+	            	System.out.println(categIm.toString());
+	            
+	            }    
+	        });
+	   		
+	   		
+	   		dishImage.setOnMouseClicked(ms->{
+	   	    	chooseImageForImageDish(st1,dishImage);
+	   	    });
+	   		
+	   		categoryImage.setOnMouseClicked(ms->{
+	   			chooseImageForImageCateg(st1,categoryImage);
+	   	    });
+	   		
+	   		tx4 =new TextArea();
+	   		tx4.setPrefSize(200,200);
+	   		
+	        descrField.setText("ѕодробнее");
+	        descrField.setExpanded(false);
+	        descrField.setAnimated(true);
+	        descrField.setContent(tx4);
+	       
+	        descrField.setOnMousePressed(ll->{
+	       	
+	       	 if(!descrField.isExpanded()){ 
+	       		
+	       		category.setVisible(false);
+	       		ingridients.setVisible(false);
+	       		comboBox.setVisible(false);
+		       	
+	       	}
+	       	if(descrField.isExpanded()){ 
+	       		
+	       		category.setVisible(true);
+	       		ingridients.setVisible(true);
+	       		comboBox.setVisible(true);
+	       	}
+	        });
+	    
+	   		
+	        ok.setOnAction(ee->{
+	        	String bju = b.getText()+"/"+j.getText()+"/"+u.getText();
 
+	    		data.add(dsh=new Dish(name.getText(),tx4.getText(),ingridients.getText(),category.getText(),
+	    				bju,calories.getText(),price.getText(),fl1,fl2));
+	    	
+	    		dhName.add(dsh.getDishName());//название
+	    	dhDesc.add(dsh.getDishDescription()); //описание
+	    	dhIngr.add(dsh.getDishIngredients());//ингридиенты
+	    	dhRef.add(dsh.getDishRefer()); //категори€
+	    	dhVal.add(dsh.getDishHValue()); //бжу
+	    	dhKkl.add(dsh.getDishKkl()); //калории
+	    	dhPrice.add(dsh.getDishPrice());//цена
+	    	categIm.add(dsh.getCategImage()); 
+	    	dishIm.add(dsh.getDishImage());	
+	    		counter1++;
+	    	
+	    		adDishStage.close();
+	        	
+	        });
+	        
+	    	
+	   		
+	   		
+	   		
+	   		
+	   		adDishStage.setScene(addDishScene);
+	   		adDishStage.show();
+	   		
+	    } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    
+		
+	}
+
+
+
+/*public void Dialog(ActionEvent event)throws IOException{
+
+	FXMLLoader loader = new FXMLLoader();
+    loader.setLocation(MainGUI.class.getResource("AddDishWindow.fxml"));
+    dialogPane = (AnchorPane) loader.load();
+    	
+     
 	
-	dialog = new Dialog();
+
+    dialog = new Dialog();
     dialog.initStyle(StageStyle.UTILITY);
     AnchorPane ap = new AnchorPane();
     ap.setPrefWidth(400);
@@ -514,7 +675,7 @@ public void Dialog(ActionEvent event)throws IOException{
     	chooseImageForImageCateg(st1,imDish);
    });
     ap.getChildren().addAll(tx,tx1,tx2,tx3,tx5,tx6,imDish,imCateg);
-    dialog.getDialogPane().setContent(ap);
+    dialog.getDialogPane().setContent(dialogPane);
     dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK,ButtonType.CANCEL);
 	dialog.showAndWait();
 	if(dialog.getResult().equals(ButtonType.OK)){
@@ -533,7 +694,7 @@ public void Dialog(ActionEvent event)throws IOException{
 		counter1++;
 	
 		}
-}
+}*/
 
 public void sortPictures() throws IOException{
 	ph1.clear();
@@ -583,12 +744,13 @@ public void SafeInfo(ActionEvent event)throws IOException{
 	}
 	System.out.println(almenu.toString());
 	System.out.println(almenuPhoto.toString());
-	sortPictures();
-	sortTheTebleInformation();
+//	sortPictures();
+	//sortTheTebleInformation();
 
 	
 	System.out.println(allMenuCombinedAndSorted.toString());
 	System.out.print(ph1);
+	rs.sendMenuInfo(almenu,almenuPhoto);
 }
 
 
@@ -831,7 +993,23 @@ public void sortTheTebleInformation(){
 		
 	}
 	
-	
+	public static javafx.scene.image.Image createImage(File file) throws IOException {
+	    java.awt.Image image = ImageIO.read(file);
+	    if (!(image instanceof RenderedImage)) {
+	        BufferedImage bufferedImage = new BufferedImage(image.getWidth(null),
+	                image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+	        Graphics g = bufferedImage.createGraphics();
+	        g.drawImage(image, 0, 0, null);
+	        g.dispose();
+
+	        image = bufferedImage;
+	    }
+	    ByteArrayOutputStream out = new ByteArrayOutputStream();
+	    ImageIO.write((RenderedImage) image, "png", out);
+	    out.flush();
+	    ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+	    return new javafx.scene.image.Image(in);
+	}
 	  
 	
 }

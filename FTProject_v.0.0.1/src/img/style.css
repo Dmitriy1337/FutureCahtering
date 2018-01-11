@@ -16,8 +16,15 @@
     -fx-opacity: 1;
 }
 
+.label-highheader {
+    -fx-font-size: 36pt;
+    -fx-font-family: "Calibri";
+    -fx-text-fill: black;
+    -fx-opacity: 1;
+}
+
 .label-header {
-    -fx-font-size: 28pt;
+    -fx-font-size: 25pt;
     -fx-font-family: "Calibri";
     -fx-text-fill: black
    
@@ -50,6 +57,20 @@ serif;
     -fx-text-fill: #d8d8d8;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
 }
+.button-head {
+    -fx-padding: 5 22 5 22;   
+    -fx-border-color: #e2e2e2;
+    -fx-border-width: 2;
+    -fx-background-radius: 0;
+    -fx-background-color: #3366cc;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-
+
+serif;
+    -fx-font-size: 20pt;
+    -fx-text-fill: #d8d8d8;
+    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+}
+
 
 .button:hover {
     -fx-background-color: #3399cc;
@@ -82,3 +103,33 @@ serif;
 .button:default:hover {
     -fx-background-color: derive(-fx-focus-color,30%);
 }
+
+.radio-button .radio {
+    -fx-border-width: 1px;
+    -fx-border-color: #000;
+    -fx-background-color: white;
+    -fx-background-image: null;
+    -fx-border-radius: 15px;
+    -fx-padding: 4px;
+}
+.radio-button .radio:selected {
+    -fx-background-color: white;
+    -fx-background-image: null;
+}
+.radio-button -radio:armed {
+    -fx-background-color: white;
+    -fx-background-image: null;
+}
+.radio-button -radio:determinate {
+    -fx-background-color: white;
+    -fx-background-image: null;
+}
+.radio-button -radio:indeterminate {
+    -fx-background-color: white;
+    -fx-background-image: null;
+}
+.radio-button .dot {
+    -fx-background-radius: 15px;
+    -fx-padding: 8px;
+}
+

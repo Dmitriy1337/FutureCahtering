@@ -12,83 +12,86 @@
 
 <AnchorPane maxWidth="1199.0" prefHeight="650.0" prefWidth="1199.0" stylesheets="@img/style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <children>
-      <ImageView id="MainPageBG" fx:id="MainPageBG" fitHeight="681.0" fitWidth="1212.0" layoutX="-6.0" layoutY="-4.0" pickOnBounds="true">
+      <ImageView id="MainPageBG" fx:id="MainPageBG" fitHeight="650.0" fitWidth="1212.0" layoutX="-6.0" layoutY="-4.0" pickOnBounds="true">
          <image>
             <Image url="@img/bg.png" />
          </image></ImageView>
-      <ImageView fitHeight="360.0" fitWidth="266.0" layoutX="100.0" layoutY="27.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+      <ImageView fitHeight="269.0" fitWidth="224.0" layoutX="100.0" layoutY="27.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
          <image>
             <Image url="@img/whitebg.png" />
          </image></ImageView>
-      <ImageView fitHeight="250.0" fitWidth="225.0" layoutX="120.0" layoutY="45.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+      <ImageView fitHeight="199.0" fitWidth="182.0" layoutX="120.0" layoutY="45.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
          <image>
             <Image url="@img/choosei.jpg" />
          </image></ImageView>
-      <Button fx:id="changeInfo" layoutX="122.0" layoutY="333.0" mnemonicParsing="false" onAction="#changeInfo" prefHeight="41.0" prefWidth="220.0" text="Редактировать" />
-      <ImageView fitHeight="89.0" fitWidth="467.0" layoutX="395.0" layoutY="32.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+      <Button fx:id="changeInfo" layoutX="136.0" layoutY="255.0" mnemonicParsing="false" onAction="#changeInfo" prefHeight="21.0" prefWidth="150.0" text="Редактировать" />
+      <ImageView fitHeight="69.0" fitWidth="467.0" layoutX="375.0" layoutY="32.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
          <image>
             <Image url="@img/whitebg.png" />
          </image></ImageView>
-      <Label fx:id="lname" layoutX="411.0" layoutY="32.0" prefHeight="44.0" prefWidth="435.0" styleClass="label-header" text="Название ресторана">
+      <Label fx:id="lname" layoutX="386.0" layoutY="30.0" prefHeight="44.0" prefWidth="435.0" styleClass="label-header" text="Название ресторана">
          <font>
-            <Font name="Calibri" size="27.0" />
+            <Font name="Calibri" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lslogan" layoutX="411.0" layoutY="76.0" prefHeight="28.0" prefWidth="416.0" style="-fx-font-size: 24;" styleClass="label-header" text="&quot;Слоган - наше все!&quot;">
+      <Label fx:id="lslogan" layoutX="387.0" layoutY="68.0" prefHeight="28.0" prefWidth="416.0" style="-fx-font-size: 24;" styleClass="label-header" text="&quot;Слоган - наше все!&quot;">
          <font>
             <Font name="Calibri Light Italic" size="22.0" />
          </font>
       </Label>
-      <ImageView fitHeight="216.0" fitWidth="463.0" layoutX="395.0" layoutY="151.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+      <ImageView fitHeight="180.0" fitWidth="463.0" layoutX="376.0" layoutY="113.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
          <image>
             <Image url="@img/whitebg.png" />
          </image></ImageView>
-      <Label layoutX="406.0" layoutY="158.0" text="Подробная информация">
-         <font>
-            <Font name="Calibri" size="22.0" />
-         </font>
-      </Label>
-      <ImageView fitHeight="150.0" fitWidth="45.0" layoutX="402.0" layoutY="185.0" pickOnBounds="true">
+      <ImageView fitHeight="149.0" fitWidth="45.0" layoutX="386.0" layoutY="126.0" pickOnBounds="true">
          <image>
             <Image url="@img/whitebg.png" />
          </image></ImageView>
-      <Label fx:id="ladress" layoutX="454.0" layoutY="189.0" text="Ваш адрес: ">
+      <Label fx:id="ladress" layoutX="440.0" layoutY="124.0" text="Адрес: ">
          <font>
             <Font name="Calibri Light" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lphone" layoutX="454.0" layoutY="215.0" text="Ваш телефон: ">
+      <Label fx:id="lphone" layoutX="440.0" layoutY="150.0" text="Телефон: ">
          <font>
             <Font name="Calibri Light" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lvk" layoutX="454.0" layoutY="240.0" text="ВКонтакте: ">
+      <Label fx:id="lvk" layoutX="440.0" layoutY="175.0" text="ВКонтакте: ">
          <font>
             <Font name="Calibri Light" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lfb" layoutX="454.0" layoutY="265.0" text="Facebook: ">
+      <Label fx:id="lfb" layoutX="440.0" layoutY="200.0" text="Facebook: ">
          <font>
             <Font name="Calibri Light" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="linst" layoutX="454.0" layoutY="290.0" text="Instagram: ">
+      <Label fx:id="linst" layoutX="440.0" layoutY="225.0" text="Instagram: ">
          <font>
             <Font name="Calibri Light" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="ltwi" layoutX="454.0" layoutY="315.0" text="Twitter: ">
+      <Label fx:id="ltwi" layoutX="440.0" layoutY="250.0" text="Twitter: ">
          <font>
             <Font name="Calibri Light" size="18.0" />
          </font>
       </Label>
-      <ImageView fitHeight="66.0" fitWidth="764.0" layoutX="99.0" layoutY="397.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
-         <image>
-            <Image url="@img/whitebg.png" />
-         </image>
-      </ImageView>
-      <Button alignment="CENTER" layoutX="720.0" layoutY="411.0" mnemonicParsing="false" onAction="#addPost" prefHeight="38.0" prefWidth="130.0" text="Отправить" />
-      <TextField layoutX="126.0" layoutY="410.0" onKeyPressed="#addPostbyEnter" prefHeight="40.0" prefWidth="584.0" />
-      <TextArea layoutX="99.0" layoutY="467.0" prefHeight="142.0" prefWidth="767.0" styleClass="label-bright" />
+      <ScrollPane layoutX="100.0" layoutY="321.0" prefHeight="269.0" prefWidth="739.0">
+         <content>
+            <AnchorPane prefHeight="482.0" prefWidth="744.0">
+               <children>
+                  <ImageView fitHeight="66.0" fitWidth="721.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+                     <image>
+                        <Image url="@img/whitebg.png" />
+                     </image>
+                  </ImageView>
+                  <Button alignment="CENTER" layoutX="589.0" layoutY="14.0" mnemonicParsing="false" onAction="#addPost" prefHeight="38.0" prefWidth="122.0" text="Отправить" />
+                  <TextArea layoutX="7.0" layoutY="11.0" prefHeight="45.0" prefWidth="576.0" wrapText="true" />
+                  <VBox layoutX="5.0" layoutY="76.0" prefHeight="208.0" prefWidth="712.0" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
    </children>
 </AnchorPane>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="203.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="185.0" fitWidth="696.0" layoutX="7.0" layoutY="11.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+         <image>
+            <Image url="@img/whitebg.png" />
+         </image>
+      </ImageView>
+      <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutX="25.0" layoutY="25.0" prefHeight="120.0" prefWidth="665.0" wrapText="true" />
+      <Label layoutX="398.0" layoutY="160.0" prefHeight="31.0" prefWidth="273.0" AnchorPane.bottomAnchor="12.0" />
+   </children>
+</AnchorPane>
