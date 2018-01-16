@@ -51,6 +51,7 @@ public class ResServer extends Application{
 		HashMap<String, byte[]>ph2 = new HashMap();
 		ArrayList<ArrayList<ArrayList<File>>>all = new ArrayList<>();
 		File change  = new File("");
+		MainGUI m= new MainGUI();
 		/**
 		 * 
 		 * 
@@ -63,7 +64,11 @@ public class ResServer extends Application{
 		
 		public int getConnNumber(){
 			
+				
+				
+			
 			return q.size();
+			
 		}
 		
 		@Override
@@ -151,6 +156,10 @@ public class ResServer extends Application{
 			 dot4.writeObject(ph2);
 			 dot5.writeObject(ph1);
 			
+			 System.out.print("1"+al);
+			 System.out.print("2"+ph2);
+			 System.out.print("3"+ph1);
+			 
 			//System.out.println("lllllllllll6666");
 		} catch (IOException e) { 
 		 //если глюк в момент отправки - закрываем данный сокет. 
@@ -319,7 +328,7 @@ public class ResServer extends Application{
 		//} 
 		//} else { // иначе - банальная рассылка по списку сокет-процессоров 
 		for (SocketProcessor sp:q) { 
-		sp.send(line); 
+			send(line);
 		} 
 		//} 
 		} 

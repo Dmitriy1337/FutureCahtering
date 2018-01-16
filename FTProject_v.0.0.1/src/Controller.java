@@ -1,6 +1,8 @@
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 public class Controller implements Initializable {
-	
+	boolean isFirst = false;
 	static String STATE_WAITING = "Waiting";
 	static String STATE_ORDER = "Order";
 	static String STATE_OFF = "Off";
@@ -63,6 +65,8 @@ public class Controller implements Initializable {
 	static String ORDER_READY = "R";
 	
 	String imagepath="";;
+	
+	
 	
 	Label obname,obslogan,obadress,obphone,obvk,obfb,obinst,obtwi;
 	int counter2 = 0;;
@@ -154,7 +158,7 @@ public class Controller implements Initializable {
 	
 	
 	ArrayList<String>posts = new ArrayList<String>();
-	ArrayList<String>info = new ArrayList<String>();
+	 public    ArrayList<String>info = new ArrayList<String>();
 	
 	ListView<Label> listView;
 	ObservableList<Label> listViewItems;
@@ -189,20 +193,45 @@ public class Controller implements Initializable {
 	}
 
 	
+	
+	public void loadToFile(){
+	 try(FileWriter writer = new FileWriter("personalData.txt", false))
+     {
+        // запись всей строки
+         String text = "";
+        
+         for(int i = 0;i<8;i++){
+        	 
+        	 text+=info.get(i)+"-";
+         }
+         
+         writer.write(text);
+       
+          
+         writer.flush();
+     }
+     catch(IOException ex){
+          
+         System.out.println(ex.getMessage());
+     } 
+	
+	
+}
+	
 	public void saveInfo(){
 		
 
 		System.out.println(mainMenu.getChildren().toString()+"/"+slogan.getText()+"/"+phone.getText()+"/"+adress.getText()+"/"+vk.getText()+"/"+fb.getText()+"/"+inst.getText()+"/"+twi.getText()+"/");
 		
-		Label obname = (Label)mainMenu.getChildren().get(5);
-		Label obslogan = (Label)mainMenu.getChildren().get(6);
-		Label obadress = (Label)mainMenu.getChildren().get(9);
-		Label obphone = (Label)mainMenu.getChildren().get(10);
-		Label obvk = (Label)mainMenu.getChildren().get(11);
-		Label obfb = (Label)mainMenu.getChildren().get(12);
-		Label obinst = (Label)mainMenu.getChildren().get(13);
-		Label obtwi = (Label)mainMenu.getChildren().get(14);
-		
+		Label obname = (Label)mainMenu.getChildren().get(6);
+		Label obslogan = (Label)mainMenu.getChildren().get(7);
+		Label obadress = (Label)mainMenu.getChildren().get(10);
+		Label obphone = (Label)mainMenu.getChildren().get(11);
+		Label obvk = (Label)mainMenu.getChildren().get(12);
+		Label obfb = (Label)mainMenu.getChildren().get(13);
+		Label obinst = (Label)mainMenu.getChildren().get(14);
+		Label obtwi = (Label)mainMenu.getChildren().get(15);
+		fillList();
 		
 		Platform.runLater(new Runnable() {
             @Override public void run() {
@@ -215,6 +244,20 @@ public class Controller implements Initializable {
         		obfb.setText("Facebook:"+fb.getText());
         		obinst.setText("Instagram:"+inst.getText());
         		obtwi.setText("Twitter:"+twi.getText());
+          
+            
+        		 info.set(0,obname.getText());
+        		 info.set(1,obslogan.getText());
+        		 info.set(2,splitString(obadress.getText()));
+        		 info.set(3,splitString(obphone.getText()));
+        		 info.set(4,splitString(obvk.getText()));
+        		 info.set(5,splitString(obfb.getText()));
+        		 info.set(6,splitString(obinst.getText()));
+        		 
+        		 System.out.println("cinfo"+obname.getText());
+        		 System.out.println("beforewrite"+info.toString());
+             	loadToFile();
+            
             }
         });
 		
@@ -227,7 +270,7 @@ public class Controller implements Initializable {
 	}
 	
 	public void openImage(){
-		ImageView ava = (ImageView)mainMenu.getChildren().get(2);
+		ImageView ava = (ImageView)mainMenu.getChildren().get(3);
 		Stage st = new Stage();
 		chooseImageIV(st,ava);
 	}
@@ -280,22 +323,29 @@ public void chooseImageIV(Stage stage,ImageView iv){
 	
 	
 	
-	
-		
+		public void fillList(){
+			for(int i = 0;i<8;i++){
+				info.add("");
+				
+			}
+		}
 
 		
 	public void changeInfo(){
 		Platform.runLater(new Runnable() {
             @Override public void run() {
+            	
+            	
+            	
             	System.out.println("//"+mainMenu.getChildren().toString());
-            	 obname = (Label)mainMenu.getChildren().get(5);
-        		 obslogan = (Label)mainMenu.getChildren().get(6);
-        		 obadress = (Label)mainMenu.getChildren().get(9);
-        		 obphone = (Label)mainMenu.getChildren().get(10);
-        		 obvk = (Label)mainMenu.getChildren().get(11);
-        		 obfb = (Label)mainMenu.getChildren().get(12);
-        		 obinst = (Label)mainMenu.getChildren().get(13);
-        		 obtwi = (Label)mainMenu.getChildren().get(14);
+            	 obname = (Label)mainMenu.getChildren().get(6);
+        		 obslogan = (Label)mainMenu.getChildren().get(7);
+        		 obadress = (Label)mainMenu.getChildren().get(10);
+        		 obphone = (Label)mainMenu.getChildren().get(11);
+        		 obvk = (Label)mainMenu.getChildren().get(12);
+        		 obfb = (Label)mainMenu.getChildren().get(13);
+        		 obinst = (Label)mainMenu.getChildren().get(14);
+        		 obtwi = (Label)mainMenu.getChildren().get(15);
             	
         		 //System.out.println(dialogPane.getChildren().toString());
         		 TextField obname2 =(TextField)dialogPane.getChildren().get(10);
@@ -318,8 +368,8 @@ public void chooseImageIV(Stage stage,ImageView iv){
         		 obfb2.setText(splitString(obfb.getText()));
         		 obinst2.setText(splitString(obinst.getText()));
         		 obtwi2.setText(splitString(obtwi.getText()));
-            	
-        		 System.out.println(info);
+            	System.out.println("3"+obname.getText());
+        		 
         		
         		 
             	if(dialogPane.isDisable()){
@@ -329,7 +379,6 @@ public void chooseImageIV(Stage stage,ImageView iv){
             	}
             	
             	
-            	
             }
         });
 		
@@ -337,6 +386,15 @@ public void chooseImageIV(Stage stage,ImageView iv){
        
 		
 		
+	}
+	
+	
+	public String returnInfoList(int a){
+		String aa = info.get(a);
+		System.out.println("binfo"+info.toString());
+		   
+            
+		return aa;   
 	}
 	
 	
@@ -497,7 +555,7 @@ public void showVisualPage(){
 				
             	
             	if(isPr4){
-            	personOverview = new FXMLLoader().load(stream)  ;
+            	personOverview = MainGUI.loader.load(stream);
             	isPr4 = false;
             	}
             
@@ -661,7 +719,7 @@ public void showVisualPage(){
 		
 		
 		
-		ScrollPane scrollPost =(ScrollPane) mainMenu.getChildren().get(15);
+		ScrollPane scrollPost =(ScrollPane) mainMenu.getChildren().get(16);
 		System.out.println("scrollPost"+scrollPost.getContent().toString());
 		AnchorPane container =(AnchorPane) scrollPost.getContent();//  (ScrollPane) mainMenu.getChildren().get(15);
 		
@@ -732,7 +790,11 @@ public void showVisualPage(){
        System.out.println(borderPane.toString());
           borderPane.setCenter(stateView);
           
-       
+          int connNumber = MainGUI.rs.getConnNumber();  
+
+ Label l = (Label)stateView.getChildren().get(3);
+ InetAddress me = InetAddress.getLocalHost();    
+ l.setText(me.toString()+"/"+connNumber);  
 			counter = 0;	
         //  System.out.println(personOverview.getChildren().toString());
 				 
@@ -765,7 +827,6 @@ public void showVisualPage(){
 	          System.out.println(borderPane.toString());
 	             borderPane.setCenter(mainMenu);
 	             
-	          
 				counter = 0;	
 	           //  System.out.println(personOverview.getChildren().toString());
 					 
@@ -804,7 +865,11 @@ public void showVisualPage(){
 	
 	public void setPlanshetState(){
 			
+		
+		
 		int connNumber = MainGUI.rs.getConnNumber();
+		
+		
 		System.out.println("connNumber "+connNumber);
 		int fPaneNumber=0;
 		if(connNumber%4==0){
@@ -863,11 +928,11 @@ public void showVisualPage(){
 						
 						device.setBorder(new Border(new BorderStroke(Color.BLACK, 
 					            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-						Label dName = (Label)device.getChildren().get(0);
-						Label dState = (Label)device.getChildren().get(1);
-						Label dNumber = (Label)device.getChildren().get(2);
-						Circle dCircle = (Circle)device.getChildren().get(3);
-						Button dButton = (Button)device.getChildren().get(4);
+						Label dName = (Label)device.getChildren().get(1);
+						Label dState = (Label)device.getChildren().get(2);
+						Label dNumber = (Label)device.getChildren().get(3);
+						Circle dCircle = (Circle)device.getChildren().get(4);
+						Button dButton = (Button)device.getChildren().get(5);
 						
 						dName.setText("Устройство № "+dList[j][i].getNumber());
 						dState.setText("Состояние: "+dList[j][i].getState());
@@ -877,6 +942,7 @@ public void showVisualPage(){
 						
 						//device.getChildren().add(new Label(dList[j][i].getState()));
 						devicePane.add(device, j, i, 1, 1);
+					GridPane.setMargin(device, new Insets(10,10,10,10));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
@@ -10,6 +11,11 @@
 
 <AnchorPane prefHeight="116.0" prefWidth="225.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <children>
+      <ImageView fitHeight="116.0" fitWidth="225.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+         <image>
+            <Image url="@img/whitebg.png" />
+         </image>
+      </ImageView>
       <Label fx:id="dName" layoutX="6.0" layoutY="5.0" prefHeight="18.0" prefWidth="166.0" text="Устройство №">
          <font>
             <Font name="Calibri" size="16.0" />
@@ -22,6 +28,6 @@
       </Label>
       <Label fx:id="dNumber" layoutX="16.0" layoutY="50.0" text="Номер заказа:" />
       <Circle fx:id="stateCircle" fill="LIME" layoutX="210.0" layoutY="102.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
-      <Button fx:id="confirmButton" disable="true" layoutX="71.0" layoutY="81.0" mnemonicParsing="false" opacity="0.0" prefHeight="18.0" prefWidth="79.0" text="Оплачено" textAlignment="CENTER" />
+      <Button fx:id="confirmButton" disable="true" layoutX="71.0" layoutY="81.0" mnemonicParsing="false" opacity="0.0" prefHeight="18.0" prefWidth="79.0" text="Оплачено" textAlignment="CENTER" visible="false" />
    </children>
 </AnchorPane>

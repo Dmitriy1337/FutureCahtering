@@ -1,9 +1,11 @@
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
@@ -36,20 +39,28 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -66,6 +77,84 @@ public class MainGUI extends Application implements Initializable{
 	
 	int  cc = 0;	
 	static ResServer rs;
+	static int middleVar = 0 ;
+    static  boolean openFromMenu = false;
+    GraphicsEnvironment environment =  GraphicsEnvironment.getLocalGraphicsEnvironment();
+    String fontNames[] = environment.getAvailableFontFamilyNames();
+    public Button usAll;
+    
+    public AnchorPane redactor;
+    public ListView<Label>redactorList;	   
+    public Button addorsafe;	    
+    static Image imageforPattern;
+	public Label txt1,txt2,txt3,Buttontxt1,Buttontxt2,Buttontxt3;
+    public Label animColor;
+	public TextField PatternTextSize, TextBorderSize, ButtonTextSize,ButtonBorderSize;
+	public ColorPicker PatternTextColor,PatternBackground,TextBorderColor,ButtonTextColor,ButtonBackgroundColor,ButtonBorderColor,animationColor;
+	public ChoiceBox<String> PatternFont,ButtonTextFont;
+	public Slider PatternOpacity,ButtonTextOpacity;
+	public CheckBox animation;
+	static String textinfo="default";
+	static String buttoninfo="default";
+	static HashMap<Integer, ArrayList<String>>ListOfPatterns = new HashMap<>();
+	static public ArrayList<BackgroundImage>patt1=new ArrayList<>();
+	static public ArrayList<BackgroundImage>patt2=new ArrayList<>();
+	static public ArrayList<BackgroundImage>patt3=new ArrayList<>();
+	static public ArrayList<BackgroundImage>patt4=new ArrayList<>();
+	static public ArrayList<BackgroundImage>patt5=new ArrayList<>();
+	static ArrayList<String>Textlist  = new ArrayList<>();
+	static ArrayList<String>Textlist1  = new ArrayList<>();
+	static boolean ViewIsClicked=false;
+	static BackgroundImage bgm;
+	static BackgroundImage bgm1;
+	static BackgroundImage bgm2;
+	static String menu;
+	static int mainFieldTextSize;
+	static int addFieldTextSize;
+	static int CellSize;
+	static int Number=0;
+	static int Number1=0;
+	public Button ButtonMenu,ButtonMakeOrder,ButtonOrderCondition,ButtonAboutUs;
+	public Label nameLabel;
+	public Label sloganLabel;
+	static Stage kk;
+	public Label changeRedac;
+	 public GridPane redac1,redac2;
+	public int  positionNumber=0; 
+	public GridPane patMainV;
+	public  Label lbb1;
+	public ListView<String> listCategPattern;
+	Image startImage = new Image("img/bckg.jpg");
+	 public BackgroundImage startBg =  new BackgroundImage(startImage, 
+	    BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+	    BackgroundPosition.DEFAULT, 
+	    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, true, true));
+	static boolean isOpen =false;
+	 public   Label lDish;
+	 public TextField test;
+	 public   ListView<Object> PatternList;
+	 static String textt;
+	public int main_color=30;
+	 public AnchorPane redactorPane;
+	static public  BackgroundImage bgImage ;
+	static int slideNumber=0;
+	public Label PatternName;
+static public HashMap<String,ArrayList<BackgroundImage>>bgpatterns = new HashMap<>();
+
+@FXML   Label ResName;
+	 @FXML
+	
+	 static ArrayList<Label>listofcategoriesnames = new ArrayList<>();
+	 static ArrayList<Label>listofdishesnames = new ArrayList<>();
+	@FXML 
+	
+	public GridPane MenuPane;
+	public Button UsePattern;
+	
+
+	
+	
+	
 	
 	
 	boolean gg = false;
@@ -86,8 +175,8 @@ public class MainGUI extends Application implements Initializable{
 	 Label nam;
 	 Label slog;
  
-	
-	
+	Dish selectedDish = null;
+	public Button delete;
 	
 	Button menuB;
 	Button orderB;
@@ -175,7 +264,7 @@ public class MainGUI extends Application implements Initializable{
 	@FXML  TableColumn<Dish, String> t7;
 	public AnchorPane InfoPane;
 	public ListView<Object> ll;
-
+public Button changeButton;
 	public ListView<Object> ld;
 	
 	@FXML TitledPane descrField;
@@ -269,15 +358,15 @@ public Label DishName,DishValue,DishDescription,DishIngredients,DishKkal,DishPri
   @FXML
   public   AnchorPane Dialog1;
 	int counter1=-1;
-	ArrayList<String>dhName =new ArrayList<String>();
-	ArrayList<String>dhDesc =new ArrayList<String>();
-	ArrayList<String>dhIngr =new ArrayList<String>();
-	ArrayList<String>dhRef =new ArrayList<String>();
-	ArrayList<String>dhVal =new ArrayList<String>();
-	ArrayList<String>dhKkl =new ArrayList<String>();
-	ArrayList<String>dhPrice =new ArrayList<String>();
-	ArrayList<File>categIm =new ArrayList<File>();
-	ArrayList<File>dishIm =new ArrayList<File>();
+	 ArrayList<String>dhName =new ArrayList<String>();
+	 ArrayList<String>dhDesc =new ArrayList<String>();
+	 ArrayList<String>dhIngr =new ArrayList<String>();
+	 ArrayList<String>dhRef =new ArrayList<String>();
+	 ArrayList<String>dhVal =new ArrayList<String>();
+	 ArrayList<String>dhKkl =new ArrayList<String>();
+	 ArrayList<String>dhPrice =new ArrayList<String>();
+	 ArrayList<File>categIm =new ArrayList<File>();
+	 ArrayList<File>dishIm =new ArrayList<File>();
 	Group gr1;
 	ListView<String>list1;
 	ImageView imDish;
@@ -288,8 +377,8 @@ public Label DishName,DishValue,DishDescription,DishIngredients,DishKkal,DishPri
 	Image i23;
 	Dish dsh;
 	Stage st1 = new Stage();
-
-	
+	static FXMLLoader loader;
+	 
 	//ResServer rs;
 	ArrayList<ArrayList<String>>almenu = new ArrayList<>();
 	ArrayList<ArrayList<File>>almenuPhoto = new ArrayList<>();
@@ -311,9 +400,17 @@ public Label DishName,DishValue,DishDescription,DishIngredients,DishKkal,DishPri
 		showPreview(mainWindowStage);
 		
 		
+				bgpatterns.put("MainView",patt1);  
+				    bgpatterns.put("Categories",patt2);  
+				    bgpatterns.put("Dish",patt3);
+				    bgpatterns.put("DishInfo",patt4);
+
+				
+				    	loader = new FXMLLoader();
+				        loader.setLocation(MainGUI.class.getResource("MainMenu.fxml"));
+				        
 		
-		
-		
+				        
 	}
 
 	
@@ -357,15 +454,7 @@ public Label DishName,DishValue,DishDescription,DishIngredients,DishKkal,DishPri
 			}
 	}
 	
-	public void LabelsAddTest(){
-		  InfoPane.setVisible(false);
-		  InfoPane.setDisable(true);
-		  ld.setVisible(true);  
-		  ld.setDisable(false);
-		  
-		   
-		   
-		}
+	
 	public void showVisualMenu(Stage st1){
 		try {
             // Загружаем корневой макет из fxml файла.
@@ -377,7 +466,8 @@ public Label DishName,DishValue,DishDescription,DishIngredients,DishKkal,DishPri
             
             // Отображаем сцену, содержащую корневой макет.
            mainScene.setRoot(rootLayout);
-            st1.setScene(mainScene);
+          
+           st1.setScene(mainScene);
             st1.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -388,19 +478,16 @@ public Label DishName,DishValue,DishDescription,DishIngredients,DishKkal,DishPri
 	
 	
 
-public void showCategoriesAndDishes(ActionEvent event) throws IOException{//открываеться при нажатии кнопки меню
-	
-		try {
-           AnchorPane pane  = FXMLLoader.load(getClass().getResource("MenuView.fxml"));
-           
-           MainMenuGroup.setVisible(false);
-           
-           root.getChildren().addAll(pane);
-      
-		} catch (IOException e) {
-           e.printStackTrace();
-       }
-	} 
+	public void showCategoriesAndDishes(ActionEvent event) throws IOException{
+		  
+	    
+	    
+	    MenuPane.setDisable(true);
+	      MenuPane.setVisible(false);
+	      ll.setVisible(true);
+	    ll.setDisable(false);
+	      positionNumber=0;
+	  }
 
 
 
@@ -482,7 +569,7 @@ public void showCategoriesAndDishes(ActionEvent event) throws IOException{//откр
 	   		
 	   		tx4 =new TextArea();
 	   		tx4.setPrefSize(200,200);
-	   		
+	   		tx4.setWrapText(true);
 	        descrField.setText("Подробнее");
 	        descrField.setExpanded(false);
 	        descrField.setAnimated(true);
@@ -508,10 +595,10 @@ public void showCategoriesAndDishes(ActionEvent event) throws IOException{//откр
 	   		
 	        ok.setOnAction(ee->{
 	        	String bju = b.getText()+"/"+j.getText()+"/"+u.getText();
-
+	        
 	    		data.add(dsh=new Dish(name.getText(),tx4.getText(),ingridients.getText(),category.getText(),
 	    				bju,calories.getText(),price.getText(),fl1,fl2));
-	    	
+	    		System.out.println("dsh.getDishName() "+dsh.getDishName());
 	    		dhName.add(dsh.getDishName());//название
 	    	dhDesc.add(dsh.getDishDescription()); //описание
 	    	dhIngr.add(dsh.getDishIngredients());//ингридиенты
@@ -522,13 +609,14 @@ public void showCategoriesAndDishes(ActionEvent event) throws IOException{//откр
 	    	categIm.add(dsh.getCategImage()); 
 	    	dishIm.add(dsh.getDishImage());	
 	    		counter1++;
-	    	
+	    		 SafeInfo();
+	    		System.out.println("sizebefore"+dhName.size());
 	    		adDishStage.close();
 	        	
 	        });
 	        
 	    	
-	   		
+	       
 	   		
 	   		
 	   		
@@ -544,157 +632,11 @@ public void showCategoriesAndDishes(ActionEvent event) throws IOException{//откр
 		
 	}
 
-
-
-/*public void Dialog(ActionEvent event)throws IOException{
-
-	FXMLLoader loader = new FXMLLoader();
-    loader.setLocation(MainGUI.class.getResource("AddDishWindow.fxml"));
-    dialogPane = (AnchorPane) loader.load();
-    	
-     
+	
 	
 
-    dialog = new Dialog();
-    dialog.initStyle(StageStyle.UTILITY);
-    AnchorPane ap = new AnchorPane();
-    ap.setPrefWidth(400);
-    
-    ap.setPrefHeight(620);
-    Label lb  =new Label("Название");
-    lb.setLayoutX(34);
-    lb.setLayoutY(65);
-    lb.setFont(new Font(16));
-    ap.getChildren().add(lb);
-    Label lb1  =new Label("Ингредиенты");
-    lb1.setLayoutX(37);
-    lb1.setLayoutY(200);
-    lb1.setFont(new Font(16));
-    ap.getChildren().add(lb1);
-    Label lb2  =new Label("Ккл");
-    lb2.setLayoutX(36);
-    lb2.setLayoutY(527);
-    lb2.setFont(new Font(16));
-    ap.getChildren().add(lb2);
-    Label lb3  =new Label("Категория");
-    lb3.setLayoutX(36);
-    lb3.setLayoutY(157);
-    lb3.setFont(new Font(16));
-    ap.getChildren().add(lb3);
-    Label lb4 =new Label("Описание");
-    lb4.setLayoutX(36);
-    lb4.setLayoutY(109);
-    lb4.setFont(new Font(16));
-    ap.getChildren().add(lb4);
-    Label lb5  =new Label("Белки/Жиры"
-    +System.lineSeparator()		+ "/Углеводы");
-    lb5.setLayoutX(36);
-    lb5.setLayoutY(338);
-    lb5.setFont(new Font(16));
-    ap.getChildren().add(lb5);
-    Label lb6  =new Label("Цена");
-    lb6.setLayoutX(228);
-    lb6.setLayoutY(527);
-    lb6.setFont(new Font(16));
-    ap.getChildren().add(lb6);
-    Label lb7  =new Label("Категория(Картинка)");
-    lb7.setLayoutX(36);
-    lb7.setLayoutY(423);
-    lb7.setFont(new Font(16));
-    ap.getChildren().add(lb7);
-    Label lb8  =new Label("Блюдо(Картинка)");
-    lb8.setLayoutX(229);
-    lb8.setLayoutY(423);
-    lb8.setFont(new Font(16));
-    ap.getChildren().add(lb8);
-     tx =new TextField();
-    tx.setLayoutX(154);
-    tx.setLayoutY(65);
-    tx.setPrefSize(202,25);
-    tx1 =new TextArea();
-    tx1.setLayoutX(156);
-    tx1.setLayoutY(200);
-    tx1.setPrefSize(200,120);
-    tx4 =new TextArea();
-   
-    tx4.setPrefSize(200,200);
-    TitledPane tl = new TitledPane();
-     tl.setText("Подробнее");
-     tl.setExpanded(false);
-     tl.setAnimated(true);
-     tl.setContent(tx4);
-     tl.setLayoutX(154);
-     tl.setLayoutY(109);
-     tl.setOnMousePressed(ll->{
-    	
-    	 if(!tl.isExpanded()){ 
-    		
-    		tx1.setVisible(false);
-    		tx3.setVisible(false);
-    	
-    	}
-    	if(tl.isExpanded()){ 
-    		
-    		tx1.setVisible(true);
-    		tx3.setVisible(true);
-    		
-    	}
-     });
-     ap.getChildren().add(tl);
-     tx2 =new TextField();
-    tx2.setLayoutX(83);
-    tx2.setLayoutY(527);
-    tx2.setPrefSize(85, 25);
-     tx3 =new TextField();
-    tx3.setLayoutX(154);
-    tx3.setLayoutY(157);
-    tx3.setPrefSize(202, 25);
-     
-     tx5 =new TextArea();
-    tx5.setLayoutX(156);
-    tx5.setLayoutY(338);
-    tx5.setPrefSize(200,57);
-     tx6 =new TextField();
-    tx6.setLayoutX(277);
-    tx6.setLayoutY(525);
-    tx6.setPrefSize(75, 25);
-     imCateg  =new ImageView("img/planshet.jpg");
-    imCateg.setFitHeight(66);
-    imCateg.setFitWidth(75);
-    imCateg.setLayoutX(70);
-    imCateg.setLayoutY(450);
-    imCateg.setOnMouseClicked(ms->{
-    	chooseImageForImageDish(st1,imCateg);
-    });
-     imDish  =new ImageView("img/planshet.jpg");
-    imDish.setFitHeight(66);
-    imDish.setFitWidth(75);
-   imDish.setLayoutX(239);
-    imDish.setLayoutY(450);
-    imDish.setOnMouseClicked(ms1->{
-    	chooseImageForImageCateg(st1,imDish);
-   });
-    ap.getChildren().addAll(tx,tx1,tx2,tx3,tx5,tx6,imDish,imCateg);
-    dialog.getDialogPane().setContent(dialogPane);
-    dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK,ButtonType.CANCEL);
-	dialog.showAndWait();
-	if(dialog.getResult().equals(ButtonType.OK)){
-		data.add(dsh=new Dish(tx.getText(),tx4.getText(),tx1.getText(),tx3.getText(),tx5.getText(),
-				tx2.getText(),tx6.getText(),fl1,fl2));
-	
-		dhName.add(dsh.getDishName());
-	dhDesc.add(dsh.getDishDescription()); 
-	dhIngr.add(dsh.getDishIngredients());
-	dhRef.add(dsh.getDishRefer()); 
-	dhVal.add(dsh.getDishHValue()); 
-	dhKkl.add(dsh.getDishKkl()); 
-	dhPrice.add(dsh.getDishPrice());
-	categIm.add(dsh.getCategImage()); 
-	dishIm.add(dsh.getDishImage());	
-		counter1++;
-	
-		}
-}*/
+
+
 
 public void sortPictures() throws IOException{
 	ph1.clear();
@@ -718,10 +660,11 @@ public void sortPictures() throws IOException{
 		 }
 }
 
-public void SafeInfo(ActionEvent event)throws IOException{
+public void SafeInfo(){
 	allMenuCombinedAndSorted.clear();
 	almenu.clear();
 	almenuPhoto.clear();
+	System.out.println("size"+dhName.size());
 	for(int i=0;i<dhName.size();i++){
 		
 		ArrayList<String>al = new ArrayList<>();
@@ -738,24 +681,36 @@ public void SafeInfo(ActionEvent event)throws IOException{
 		all.add(dishIm.get(i));
 		almenu.add(al);
 		almenuPhoto.add(all);
+	
+		System.out.println(i+"almenu"+almenu.toString());
+		System.out.println(i+"almenuPhoto"+almenuPhoto.toString());
 	}
-	if(almenuPhoto.get(0).get(0)==null){
-		System.out.println("9999999999999999999999");
+	//if(almenuPhoto.get(0).get(0)==null){
+	//	System.out.println("9999999999999999999999");
+	//}
+	System.out.println("almenu"+almenu.toString());
+	System.out.println("almenuPhoto"+almenuPhoto.toString());
+	try {
+		sortPictures();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
-	System.out.println(almenu.toString());
-	System.out.println(almenuPhoto.toString());
-//	sortPictures();
-	//sortTheTebleInformation();
+	sortTheTebleInformation();
 
 	
 	System.out.println(allMenuCombinedAndSorted.toString());
 	System.out.print(ph1);
-	rs.sendMenuInfo(almenu,almenuPhoto);
+	
+	
+	//rs.sendMenuInfo(almenu,almenuPhoto);
+	
 }
 
 
 
 public void sortTheTebleInformation(){
+	System.out.println("almenu"+almenu.size());
 	for (int i = 0; i < almenu.size(); i++) {
         ArrayList<ArrayList<String>> tesar = new ArrayList<>();
        count=0;
@@ -855,100 +810,376 @@ public void sortTheTebleInformation(){
                   );
           }
 
+    
+     
+      public void deleteDish(){
+    	  data.remove(data.indexOf(selectedDish));
+    	  mainTb.refresh();
+    	  
+      }
+      
+      
+     
+      public String getFromFile(){
+    	  String s = "";
+    	  try(FileReader reader = new FileReader("personalData.txt"))
+          {
+             
+    		  // читаем посимвольно
+              int c;
+              while((c=reader.read())!=-1){
+                   
+                 s+=(char)c;
+              } 
+          }
+          catch(IOException ex){
+               
+              System.out.println(ex.getMessage());
+          }   
+     return s;
+      }
 
+      public void changeDish(){
+    	  
+
+  		HashSet noDuplicateCateg= new HashSet(dhRef);
+  		ObservableList<String> categories =    FXCollections.observableArrayList();
+  		categories.addAll(noDuplicateCateg);
+  		//categories.
+  	    try {
+  	    	FXMLLoader loader = new FXMLLoader();
+  		    loader.setLocation(MainGUI.class.getResource("AddDishWindow.fxml"));
+  	   		dialogPane = (AnchorPane) loader.load();
+  	   		System.out.println(dialogPane.getChildren().toString());
+  	   		
+  	   		Stage adDishStage = new Stage();
+  	   		adDishStage.initStyle(StageStyle.UNDECORATED);
+  	   		Scene addDishScene = new Scene(dialogPane);
+  	   		Label header= (Label)dialogPane.getChildren().get(3);
+  	   		header.setText("Изменить");
+  	   		TextField name=(TextField)dialogPane.getChildren().get(13);
+  	   		descrField = (TitledPane)dialogPane.getChildren().get(14);
+  	   		TextField category=(TextField)dialogPane.getChildren().get(15);
+  	   		TextField ingridients=(TextField)dialogPane.getChildren().get(16);
+  	   		TextField b=(TextField)dialogPane.getChildren().get(17);
+  	   		TextField j=(TextField)dialogPane.getChildren().get(18);
+  	   		TextField u=(TextField)dialogPane.getChildren().get(19);
+  	   		TextField calories=(TextField)dialogPane.getChildren().get(20);
+  	   		TextField price=(TextField)dialogPane.getChildren().get(21);
+  	   		
+  	   		String[] bjumass =selectedDish.getDishHValue().split("/") ;
+  	   		
+  	   	name.setText(selectedDish.getDishName());
+  	   	category.setText(selectedDish.getDishRefer());	
+  	   	ingridients.setText(selectedDish.getDishIngredients());	
+  	   	b.setText(bjumass[0]);	
+  	   	j.setText(bjumass[1]);	
+  	   	u.setText(bjumass[2]);	
+  	   	calories.setText(selectedDish.getDishKkl());	
+  	   	price.setText(selectedDish.getDishPrice());	
+
+  	   		
+  	   		ImageView dishImage = (ImageView)dialogPane.getChildren().get(22);
+  	   		ImageView categoryImage = (ImageView)dialogPane.getChildren().get(23);
+  	   		
+  	   		
+  	   
+  	  Image image = new Image(selectedDish.getCategImage().toURI().toString());
+  	  categoryImage.setImage(image);
+  	
+  	   
+  	Image image1 = new Image(selectedDish.getDishImage().toURI().toString());
+	   	dishImage.setImage(image1);
+  	   	
+  	   		
+  	   		Button ok = (Button)dialogPane.getChildren().get(24);
+  	   		ComboBox comboBox = (ComboBox)dialogPane.getChildren().get(25);
+  	   		ImageView exit = (ImageView)dialogPane.getChildren().get(26);
+  	   		Image enteredI = new Image("img/animationcb.png");
+  	   		Image exitedI = new Image("img/cb.png");
+  	   		exit.setOnMouseEntered(a->{
+  	   			exit.setImage(enteredI);	
+  	   			
+  	   		});
+  	   		exit.setOnMouseExited(a->{
+  	   			
+  	   			exit.setImage(exitedI);	
+  	   		});
+  	   		exit.setOnMouseClicked(t->{
+  	   			adDishStage.close();
+  	   			
+  	   		});
+  	   		comboBox.setItems(categories);
+  	   		
+  	   		comboBox.valueProperty().addListener(new ChangeListener<String>() {
+  	            @Override 
+  	            public void changed(ObservableValue ov, String t, String choose) {                
+  	               
+  	            	int n = dhRef.indexOf(choose);
+  	            	category.setText(choose);
+  	            	
+  	            	//BufferedImage i =ImageIO.read(categIm.get(n));
+  	            	
+  	            	try {
+  						categoryImage.setImage(createImage(dishIm.get(n)));
+  					} catch (IOException e) {
+  						// TODO Auto-generated catch block
+  						e.printStackTrace();
+  					}
+  	            	
+  	            	System.out.println(ov+"/"+t+"/"+choose);          
+  	            	System.out.println(categIm.toString());
+  	            
+  	            }    
+  	        });
+  	   		
+  	   		
+  	   		dishImage.setOnMouseClicked(ms->{
+  	   	    	chooseImageForImageDish(st1,dishImage);
+  	   	    });
+  	   		
+  	   		categoryImage.setOnMouseClicked(ms->{
+  	   			chooseImageForImageCateg(st1,categoryImage);
+  	   	    });
+  	   		
+  	   		tx4 =new TextArea();
+  	   		tx4.setPrefSize(200,200);
+  	   		tx4.setWrapText(true);
+  	        tx4.setText(selectedDish.getDishDescription());
+  	   		descrField.setText("Подробнее");
+  	        descrField.setExpanded(false);
+  	        descrField.setAnimated(true);
+  	        descrField.setContent(tx4);
+  	       
+  	        descrField.setOnMousePressed(ll->{
+  	       	
+  	       	 if(!descrField.isExpanded()){ 
+  	       		
+  	       		category.setVisible(false);
+  	       		ingridients.setVisible(false);
+  	       		comboBox.setVisible(false);
+  		       	
+  	       	}
+  	       	if(descrField.isExpanded()){ 
+  	       		
+  	       		category.setVisible(true);
+  	       		ingridients.setVisible(true);
+  	       		comboBox.setVisible(true);
+  	       	}
+  	        });
+  	    
+  	   		
+  	        ok.setOnAction(ee->{
+  	        	String bju = b.getText()+"/"+j.getText()+"/"+u.getText();
+  	        	selectedDish.setDishName(name.getText());
+  	        	selectedDish.setDishDescription(tx4.getText());
+  	        	selectedDish.setDishRefer(category.getText());
+  	        	selectedDish.setDishIngredients(ingridients.getText());
+  	        	selectedDish.setDishHValue(bju);
+  	        	selectedDish.setDishKkl(calories.getText());
+  	        	selectedDish.setDishPrice(price.getText());
+  	        	selectedDish.setCategImage(fl1);
+  	        	selectedDish.setDishImage(fl2);
+  	        
+  	        	adDishStage.close();
+  	        mainTb.refresh();	
+  	        });
+  	        
+  	    	
+  	       
+  	   		
+  	   		
+  	   		
+  	   		adDishStage.setScene(addDishScene);
+  	   		adDishStage.show();
+  	   		
+  	    } catch (IOException e) {
+  			// TODO Auto-generated catch block
+  			e.printStackTrace();
+  		}
+  	    
+  	    
+  		
+  	
+      }
+      
+      
+      
 	@Override
 	public void initialize(java.net.URL location, ResourceBundle resources) {
-
-		if(ll!=null){
-			try {
-			System.out.println(allMenuCombinedAndSorted.size());
-		for(int i= 0;i<allMenuCombinedAndSorted.size();i++){	
+		
+		
+		
+	
+		
+		
+		if(ll!=null){  //ll.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 			
-			Label lbb1 =new Label(allMenuCombinedAndSorted.get(i).get(allMenuCombinedAndSorted.get(i).size()-1).get(3));
-			lbb1.setFont(new Font(34));
 			
-			Label DishCount =new Label(Integer.toString(allMenuCombinedAndSorted.get(i).size()));
-			DishCount.setFont(new Font(34));
+			String[]m = getFromFile().split("-");
+System.out.println(getFromFile());
+			nameLabel.setText(m[0]);
+		       sloganLabel.setText(m[1]);
 			
-			ImageView img = new ImageView("img/planshet.jpg");
-			img.setFitHeight(50);
-			img.setFitWidth(50);
-			
-			String URLInfo = ph2.get(allMenuCombinedAndSorted.get(i).get(allMenuCombinedAndSorted.get(i).size()-1).get(3)).toURI().toURL().toString();
-			Image im = new Image(URLInfo);
-			img.setImage(im);
-			GridPane gp = new GridPane();
-			GridPane.setHalignment(img, HPos.LEFT);
-			GridPane.setHalignment(lbb1, HPos.CENTER);
-			GridPane.setHalignment(DishCount, HPos.RIGHT); 
-			GridPane.setMargin(lbb1, new Insets(0,0,0,60));
-			GridPane.setMargin(DishCount, new Insets(0,0,0,100));
-			gp.add(DishCount,1,0);
-			gp.getChildren().addAll(lbb1,img);
-			
-			gp.setOnMouseClicked(lll->{
-				try {
-				ld.getItems().clear();
-				int position=ll.getSelectionModel().selectedIndexProperty().getValue();
-				for(int k = 0;k<allMenuCombinedAndSorted.get(position).size();k++){
-				Label lDish  =new Label(allMenuCombinedAndSorted.get(position).get(k).get(0));
-				lDish.setFont(new Font(34));
-				
-				ImageView img1 = new ImageView("img/planshet.jpg");
-				img1.setFitHeight(50);
-				img1.setFitWidth(50);
-				
-				String URLInfo1 = ph1.get(allMenuCombinedAndSorted.get(position).get(allMenuCombinedAndSorted.get(position).size()-1).get(3)).get(k).toURI().toURL().toString();
-				
-				Image im1 = new Image(URLInfo1);
-				img1.setImage(im1);
-				GridPane gp1 = new GridPane();
-				GridPane.setHalignment(img1, HPos.LEFT);
-				GridPane.setHalignment(lDish, HPos.CENTER);
-				GridPane.setMargin(lDish, new Insets(0,0,0,70));
-				gp1.getChildren().addAll(lDish,img1);
-				gp1.setOnMouseClicked(pp->{;
-				try {
-				int Dishposition=ld.getSelectionModel().selectedIndexProperty().getValue();
-				
-				
-				String URLDish = ph1.get(allMenuCombinedAndSorted.get(position).get(allMenuCombinedAndSorted.get(position).size()-1).get(3)).get(Dishposition).toURI().toURL().toString();
-				
-				Image imDish = new Image(URLDish);
-				DishImg.setImage(imDish);
-				DishName.setText(allMenuCombinedAndSorted.get(position).get(Dishposition).get(0));
-				DishValue.setText(allMenuCombinedAndSorted.get(position).get(Dishposition).get(4));
-				DishDescription.setText(allMenuCombinedAndSorted.get(position).get(Dishposition).get(1));
-				DishIngredients.setText(allMenuCombinedAndSorted.get(position).get(Dishposition).get(2));
-				DishKkal.setText(allMenuCombinedAndSorted.get(position).get(Dishposition).get(5));
-                DishPrice.setText(allMenuCombinedAndSorted.get(position).get(Dishposition).get(6));
-				InfoPane.setVisible(true);
-				InfoPane.setDisable(false);
-				ld.setVisible(false);	
-				ld.setDisable(true);
-				
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} 
-				
-				});
-				ld.getItems().add(gp1);
-				}
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			});
-	 		
-			ll.getItems().add(gp);
-	 		
-	 		}
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			}
+		       
+		       try {
+			   System.out.println(allMenuCombinedAndSorted.size());
+			  for(int i= 0;i<allMenuCombinedAndSorted.size();i++){ 
+			   
+			    lbb1 =new Label(allMenuCombinedAndSorted.get(i).get(allMenuCombinedAndSorted.get(i).size()-1).get(3)+"(x"+allMenuCombinedAndSorted.get(i).size()+")");
+			   
+			   
+			   listofcategoriesnames.add(lbb1);
+			   ImageView img = new ImageView("img/chooseI.png");
+			   img.setFitHeight(50);
+			   img.setFitWidth(50);
+			   if(ph2.get(allMenuCombinedAndSorted.get(i).get(allMenuCombinedAndSorted.get(i).size()-1).get(3))!=null){
+			   
+			    String URLInfo = ph2.get(allMenuCombinedAndSorted.get(i).get(allMenuCombinedAndSorted.get(i).size()-1).get(3)).toURI().toURL().toString();
+			   
+			   Image im = new Image(URLInfo);
+			   img.setImage(im);
+			   }
+			   GridPane gp = new GridPane();
+			   GridPane.setHalignment(img, HPos.LEFT);
+			   GridPane.setHalignment(lbb1, HPos.CENTER);
+			   GridPane.setMargin(img, new Insets(5,30,0,0));
+			   GridPane.setMargin(lbb1, new Insets(0,0,0,60));
+			   
+			   gp.getChildren().addAll(lbb1,img);
+			   
+			   gp.setOnMouseClicked(lll->{
+			    positionNumber=1;
+			    try {
+			    ld.setVisible(true);
+			    ld.setDisable(false);
+			    ld.getItems().clear();
+			    
+			     
+			    
+			    int position=ll.getSelectionModel().selectedIndexProperty().getValue();
+			    for(int k = 0;k<allMenuCombinedAndSorted.get(position).size();k++){
+			     if(!isOpen){
+			     lDish = new Label();
+			     
+			     
+			     if(k==0){
+			      
+			      lDish.setText(allMenuCombinedAndSorted.get(position).get((allMenuCombinedAndSorted.get(position).size()-1)).get(0)+"("+allMenuCombinedAndSorted.get(position).get((allMenuCombinedAndSorted.get(position).size()-1)).get(6)+"р.)");
+			     //// if(menu!=null){
+			      // lDish.setFont(new Font(menu,addFieldTextSize)); 
+			     // }
+			        
+			     
+			    
+			    
+			    
+			    }
+			    else if(k>0){
+			     lDish.setText(allMenuCombinedAndSorted.get(position).get(k-1).get(0)+"("+allMenuCombinedAndSorted.get(position).get(k-1).get(6)+"р.)");
+			     
+			      //if(menu!=null){
+			         //lDish.setFont(new Font(menu,addFieldTextSize)); 
+			       // } 
+			     
+			     
+			    }
+			     listofdishesnames.add(lDish); 
+			     isOpen= true;
+			     }
+			     
+			     ImageView img1 = new ImageView("img/chooseI.png");
+			    img1.setFitHeight(50);
+			    img1.setFitWidth(50);
+			    if((ph2.get(allMenuCombinedAndSorted.get(position).get(allMenuCombinedAndSorted.get(position).size()-1).get(3))!=null)&&(ph1.get(allMenuCombinedAndSorted.get(position).get(allMenuCombinedAndSorted.get(position).size()-1).get(3))!=null)){
+			    String URLInfo1 = ph1.get(allMenuCombinedAndSorted.get(position).get(allMenuCombinedAndSorted.get(position).size()-1).get(3)).get(k).toURI().toURL().toString();
+			    
+			    Image im1 = new Image(URLInfo1);
+			    img1.setImage(im1);
+			    }
+			    GridPane gp1 = new GridPane();
+			    GridPane.setHalignment(img1, HPos.LEFT);
+			    GridPane.setHalignment(lDish, HPos.CENTER);
+			    GridPane.setMargin(img1, new Insets(5,30,0,0));
+			    GridPane.setMargin(lDish, new Insets(0,0,0,70));
+			   
+			    
+			    gp1.getChildren().addAll(lDish,img1);
+			    gp1.setOnMouseClicked(pp->{;
+			    positionNumber=2;
+			    try {
+			    
+			     int Dishposition=ld.getSelectionModel().selectedIndexProperty().getValue();
+			     Image immDish = new Image("img/chooseI.png");
+			    
+			     if((ph2.get(allMenuCombinedAndSorted.get(position).get(allMenuCombinedAndSorted.get(position).size()-1).get(3))!=null)&&(ph1.get(allMenuCombinedAndSorted.get(position).get(allMenuCombinedAndSorted.get(position).size()-1).get(3))!=null)){
+			    String URLDish = ph1.get(allMenuCombinedAndSorted.get(position).get(allMenuCombinedAndSorted.get(position).size()-1).get(3)).get(Dishposition).toURI().toURL().toString();
+			    
+			     immDish = new Image(URLDish);
+			     }
+			    if(Dishposition==0){
+			    DishImg.setImage(immDish);
+			    DishName.setText(allMenuCombinedAndSorted.get(position).get(allMenuCombinedAndSorted.get(position).size()-1).get(0));
+			    DishValue.setText(allMenuCombinedAndSorted.get(position).get(allMenuCombinedAndSorted.get(position).size()-1).get(4));
+			    DishDescription.setText(allMenuCombinedAndSorted.get(position).get(allMenuCombinedAndSorted.get(position).size()-1).get(1));
+			    DishIngredients.setText(allMenuCombinedAndSorted.get(position).get(allMenuCombinedAndSorted.get(position).size()-1).get(2));
+			    DishKkal.setText(allMenuCombinedAndSorted.get(position).get(allMenuCombinedAndSorted.get(position).size()-1).get(5));
+			                DishPrice.setText(allMenuCombinedAndSorted.get(position).get(allMenuCombinedAndSorted.get(position).size()-1).get(6));
+			    InfoPane.setVisible(true);
+			    InfoPane.setDisable(false);
+			    
+			    if(bgm!=null){
+			    InfoPane.setBackground(new Background(bgm));
+			    }
+			    ld.setVisible(false); 
+			    ld.setDisable(true);
+			    ll.setVisible(false); 
+			    ll.setDisable(true);
+			    MenuPane.setVisible(false); 
+			    MenuPane.setDisable(true);
+			    }
+			    if(Dishposition>0){
+			     DishImg.setImage(immDish);
+			     DishName.setText(allMenuCombinedAndSorted.get(position).get(Dishposition-1).get(0));
+			     DishValue.setText(allMenuCombinedAndSorted.get(position).get(Dishposition-1).get(4));
+			     DishDescription.setText(allMenuCombinedAndSorted.get(position).get(Dishposition-1).get(1));
+			     DishIngredients.setText(allMenuCombinedAndSorted.get(position).get(Dishposition-1).get(2));
+			     DishKkal.setText(allMenuCombinedAndSorted.get(position).get(Dishposition-1).get(5));
+			                 DishPrice.setText(allMenuCombinedAndSorted.get(position).get(Dishposition-1).get(6));
+			     InfoPane.setVisible(true);
+			     InfoPane.setDisable(false);
+			     if(bgm!=null){
+			      InfoPane.setBackground(new Background(bgm));
+			      }
+			     ld.setVisible(false); 
+			     ld.setDisable(true);
+			     ll.setVisible(false); 
+			     ll.setDisable(true);
+			     MenuPane.setVisible(false); 
+			     MenuPane.setDisable(true);
+			    }
+			    } catch (MalformedURLException e) {
+			     // TODO Auto-generated catch block
+			     e.printStackTrace();
+			    } 
+			    
+			    });
+			    
+			    ld.getItems().add(gp1);
+			    }
+			    } catch (MalformedURLException e) {
+			     // TODO Auto-generated catch block
+			     e.printStackTrace();
+			    }
+			   });
+			    
+			   ll.getItems().add(gp);
+			    
+			    }
+			   } catch (MalformedURLException e) {
+			    // TODO Auto-generated catch block
+			    e.printStackTrace();
+			   }}
 		//            Каталог блюд                        ","                     Визуализация меню                      ","                         Бухгалтерия                        ");
 	if(t1!=null){
 		 t1.setCellValueFactory(
@@ -987,9 +1218,510 @@ public void sortTheTebleInformation(){
 	            new PropertyValueFactory<Dish,File>("dishImage")
 	        );
         mainTb.setItems(data);
+	
+        mainTb.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                selectedDish = newSelection;
+            	System.out.println(obs+""+oldSelection+"/"+newSelection);
+            }
+        });
+	
+        changeButton.setOnAction(n->{
+        	if(selectedDish!=null){
+        	changeDish();
+        	
+        	}
+        });
+        
+        delete.setOnAction(n->{
+        	if(selectedDish!=null){
+        	deleteDish();
+        	
+        	}
+        });
+	
 	}		
 		
+	if(PatternList!=null){
 	
+    
+	Image expattern1 = new Image("img/pattern4.jpg");		
+		BackgroundImage exapmlePattern1 = new BackgroundImage(expattern1, 
+					    BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+					    BackgroundPosition.DEFAULT, 
+					    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
+		
+		Image expattern2 = new Image("img/pattern5.jpg");		
+	    BackgroundImage exapmlePattern2 = new BackgroundImage(expattern2, 
+				    BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+				    BackgroundPosition.DEFAULT, 
+				    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
+	
+		bgpatterns.get("MainView").add(Number, exapmlePattern1);
+	    bgpatterns.get("Categories").add(Number, exapmlePattern2);
+	    bgpatterns.get("Dish").add(Number, exapmlePattern2);
+	    bgpatterns.get("DishInfo").add(Number, exapmlePattern2);
+	    ArrayList<String> al = new ArrayList<>();
+	    al.add("15");
+		al.add("Impact");
+		al.add("000000");
+		al.add("default");
+		al.add("ffffff");
+	    al.add("1");
+		al.add("0");
+	    al.add("000000");
+		al.add("15");
+		al.add("Arial");
+		al.add("000000");
+		al.add("default");
+		al.add("ffffff");
+		al.add("1");
+		al.add("0");
+		al.add("000000");
+		al.add(null);
+		ListOfPatterns.put(Number, al);	
+		Number++;
+		
+		  for(int k = 0;k<ListOfPatterns.size();k++){
+			    DropShadow ds = new DropShadow();
+		        ds.setOffsetY(2.3);
+		        ds.setOffsetX(2.3);
+		        ds.setColor(Color.GRAY);  
+			  Image img =   bgpatterns.get("MainView").get(k).getImage();
+	    		ImageView img1 = new ImageView();
+	    		img1.setFitHeight(100);
+	    		img1.setFitWidth(100);
+	    		img1.setImage(img);
+	    		img1.setEffect(ds);
+	    		Label patternName1 = new Label("Pattern№1");
+	    		patternName1.setFont(new Font(30));
+	    		Label patternFont1 = new Label("Style:"+ListOfPatterns.get(k).get(1));
+	    		patternFont1.setFont(new Font(15));
+	    		Label patternSize1 = new Label("TextSize:"+ListOfPatterns.get(k).get(0)+"px");
+	    		patternSize1.setFont(new Font(15));
+	    		patternName1.setStyle("-fx-text-fill:black");
+    			patternFont1.setStyle("-fx-text-fill:black");
+    			patternSize1.setStyle("-fx-text-fill:black");
+	    		Image redacPattern = new Image("img/PattRedac.jpg");
+	    		Image redacPatternExchange = new Image("img/ImageForAnim.jpg");
+	    		ImageView imgg = new ImageView();
+	    		imgg.setImage(redacPattern);
+	    		imgg.setOnMouseEntered(oo->{
+	    			imgg.setImage(redacPatternExchange);
+	    		});
+	    		imgg.setOnMouseExited(o->{
+	    			imgg.setImage(redacPattern);
+	    		});
+	    		imgg.setOnMouseClicked(ppnn->{
+	    			Number1=PatternList.getSelectionModel().selectedIndexProperty().getValue();
+	    			
+	    			openFromMenu=true;
+	    			openRedator();
+	    		
+	    		});
+                Image closePattern = new Image("img/close.jpg");
+                Image closePatternExchange = new Image("img/ImageCloseForAnim.jpg");
+                ImageView closeim = new ImageView();
+	    		closeim.setImage(closePattern);
+	    		closeim.setOnMouseEntered(oo->{
+	    			closeim.setImage(closePatternExchange);
+	    		});
+	    		closeim.setOnMouseExited(o->{
+	    			closeim.setImage(closePattern);
+	    		});
+	    		closeim.setOnMouseClicked(oo1->{
+	    			
+	    		
+	    			int deletePos =PatternList.getSelectionModel().selectedIndexProperty().getValue();
+	    			if(deletePos==0&&PatternList.getItems().size()==1){
+	    				PatternList.getItems().remove(deletePos);
+	    				ListOfPatterns.remove(deletePos);
+		    			bgpatterns.get("MainView").remove(deletePos);
+	    		    	bgpatterns.get("Categories").remove(deletePos);
+	    		    	bgpatterns.get("Dish").remove(deletePos);
+	    		    	bgpatterns.get("DishInfo").remove(deletePos);
+	    			Number=deletePos;
+	    			}
+	    			else{
+	    			for(int i = deletePos ;i<PatternList.getItems().size()-1;i++){
+	    		    	PatternList.getItems().set(i, PatternList.getItems().get(i+1));
+	    		    	ListOfPatterns.replace(i, ListOfPatterns.get(i+1));
+	    		    	
+	    		    	bgpatterns.get("MainView").set(i,bgpatterns.get("MainView").get(i+1));
+	    		    	bgpatterns.get("Categories").set(i,bgpatterns.get("Categories").get(i+1));
+	    		    	bgpatterns.get("Dish").set(i,bgpatterns.get("Dish").get(i+1));
+	    		    	bgpatterns.get("DishInfo").set(i,bgpatterns.get("DishInfo").get(i+1));
+                      
+	    		    	
+	    			}
+	    			PatternList.getItems().remove(PatternList.getItems().size()-1);
+	    			ListOfPatterns.remove(ListOfPatterns.size()-1);
+	    			bgpatterns.get("MainView").remove(bgpatterns.get("MainView").size()-1);
+    		    	bgpatterns.get("Categories").remove(bgpatterns.get("Categories").size()-1);
+    		    	bgpatterns.get("Dish").remove(bgpatterns.get("Dish").size()-1);
+    		    	bgpatterns.get("DishInfo").remove(bgpatterns.get("DishInfo").size()-1);
+    		    	Number = PatternList.getItems().size();
+	    			}
+	    			});
+	    		GridPane patternPane1 = new GridPane();
+	    		GridPane.setHalignment(img1, HPos.LEFT);
+	    		GridPane.setHalignment(imgg, HPos.RIGHT);
+	    		GridPane.setHalignment(closeim, HPos.RIGHT);
+	    		GridPane.setHalignment(patternName1, HPos.CENTER);
+	    		GridPane.setMargin(imgg, new Insets(50,0,0,130));
+	    		GridPane.setMargin(img1, new Insets(0,30,5,0));
+	    		GridPane.setMargin(closeim, new Insets(0,0,50,130));
+	    		GridPane.setMargin(patternName1, new Insets(0,25,60,0));
+	    		GridPane.setMargin(patternFont1, new Insets(10,0,0,0));
+	    		GridPane.setMargin(patternSize1, new Insets(60,0,0,0));
+	    		patternPane1.add(patternName1, 1, 0);
+	    		patternPane1.add(patternFont1, 1, 0);
+	    		patternPane1.add(patternSize1, 1, 0);
+	    		patternPane1.add(imgg, 2,0 );
+	    		patternPane1.add(closeim, 2,0 );
+	    		patternPane1.getChildren().addAll(img1);
+	    		patternPane1.setOnMouseClicked(ll1l->{
+	    			patternName1.setStyle("-fx-text-fill:black");
+	    			patternFont1.setStyle("-fx-text-fill:black");
+	    			patternSize1.setStyle("-fx-text-fill:black");
+	    			Number1=PatternList.getSelectionModel().selectedIndexProperty().getValue();
+	    			 System.out.println(Number1);
+	    		});
+	    		
+	    		PatternList.getItems().add(patternPane1);
+	    			
+	    	}
+			UsePattern.setOnAction(ll1->{;
+	    System.out.println(Number1);
+	     menu = ListOfPatterns.get(Number1).get(1);
+         addFieldTextSize = Integer.parseInt(ListOfPatterns.get(Number1).get(0));
+	    	MenuPane.getStylesheets().add(this.getClass().getResource("style2.css").toExternalForm());
+			
+			BackgroundImage bgm1 = bgpatterns.get("MainView").get(Number1);
+			BackgroundImage bgm2 = bgpatterns.get("Categories").get(Number1);
+			BackgroundImage bgm3 = bgpatterns.get("Dish").get(Number1);
+			BackgroundImage bgm4 =   bgpatterns.get("DishInfo").get(Number1); 
+			MenuPane.setBackground(new Background(bgm1));
+			 ll.setBackground(new Background(bgm2));
+			 ld.setBackground(new Background(bgm3));
+             InfoPane.setBackground(new Background(bgm4));
+			 
+             if(lbb1!=null){ 
+            	
+            	 for(int p= 0;p<listofcategoriesnames.size();p++){
+					if(ListOfPatterns.get(Number1).get(0)!=null&&ListOfPatterns.get(Number1).get(1)!=null){
+					listofcategoriesnames.get(p).setFont(new Font(menu,addFieldTextSize));
+					listofcategoriesnames.get(p).setStyle("-fx-font-family:'"+menu+"'"+";"+"-fx-font-size:"+addFieldTextSize+";"+"-fx-text-fill:"+"#"+ListOfPatterns.get(Number1).get(2).replaceAll("0x", "")+";-fx-background-color:"+"#"+ListOfPatterns.get(Number1).get(4).replaceAll("0x", "")
+							+ ";-fx-opacity:"+ListOfPatterns.get(Number1).get(5)+";-fx-border-width:"+ListOfPatterns.get(Number1).get(6)
+							+";-fx-border-color:"+"#"+ListOfPatterns.get(Number1).get(7).replaceAll("0x", ""));
+					if(textinfo.equals("bold")){
+						listofcategoriesnames.get(p).setFont(Font.font(menu,FontWeight.BOLD,addFieldTextSize));
+					}
+					if(textinfo.equals("italic")){
+						listofcategoriesnames.get(p).setFont(Font.font(menu,FontPosture.ITALIC,addFieldTextSize));
+					}
+					if(textinfo.equals("underlined")){
+						listofcategoriesnames.get(p).setUnderline(true);
+					    
+					}
+					}
+            	 }
+					
+					if(ListOfPatterns.get(Number1).get(8)!=null&&ListOfPatterns.get(Number1).get(9)!=null){
+						 //ButtonMenu.setFont(new Font(ListOfPatterns.get(Number1).get(9),Integer.parseInt(ListOfPatterns.get(Number1).get(8))));
+					    // ButtonMakeOrder.setFont(new Font(ListOfPatterns.get(Number1).get(9),Integer.parseInt(ListOfPatterns.get(Number1).get(8))));
+						 ButtonOrderCondition.setFont(new Font(ListOfPatterns.get(Number1).get(9),Integer.parseInt(ListOfPatterns.get(Number1).get(8))));
+						 ButtonAboutUs.setFont(new Font(ListOfPatterns.get(Number1).get(9),Integer.parseInt(ListOfPatterns.get(Number1).get(8))));                  
+						 ButtonMenu.setStyle("-fx-font-family:'"+menu+"'"+";"+"-fx-font-size:"+addFieldTextSize+";"+"-fx-text-fill:"+"#"+ListOfPatterns.get(Number1).get(10).replaceAll("0x", "")+";-fx-background-color:"+"#"+ListOfPatterns.get(Number1).get(12).replaceAll("0x", "")
+									+ ";-fx-opacity:"+ListOfPatterns.get(Number1).get(13)+";-fx-border-width:"+ListOfPatterns.get(Number1).get(14)
+									+";-fx-border-color:"+"#"+ListOfPatterns.get(Number1).get(15).replaceAll("0x", ""));
+						 ButtonMakeOrder.setStyle("-fx-font-family:'"+menu+"'"+";"+"-fx-font-size:"+addFieldTextSize+";"+"-fx-text-fill:"+"#"+ListOfPatterns.get(Number1).get(10).replaceAll("0x", "")+";-fx-background-color:"+"#"+ListOfPatterns.get(Number1).get(12).replaceAll("0x", "")
+									+ ";-fx-opacity:"+ListOfPatterns.get(Number1).get(13)+";-fx-border-width:"+ListOfPatterns.get(Number1).get(14)
+									+";-fx-border-color:"+"#"+ListOfPatterns.get(Number1).get(15).replaceAll("0x", ""));
+						 ButtonOrderCondition.setStyle("-fx-font-family:'"+menu+"'"+";"+"-fx-font-size:"+addFieldTextSize+";"+"-fx-text-fill:"+"#"+ListOfPatterns.get(Number1).get(10).replaceAll("0x", "")+";-fx-background-color:"+"#"+ListOfPatterns.get(Number1).get(12).replaceAll("0x", "")
+									+ ";-fx-opacity:"+ListOfPatterns.get(Number1).get(13)+";-fx-border-width:"+ListOfPatterns.get(Number1).get(14)
+									+";-fx-border-color:"+"#"+ListOfPatterns.get(Number1).get(15).replaceAll("0x", ""));
+						 ButtonAboutUs.setStyle("-fx-font-family:'"+menu+"'"+";"+"-fx-font-size:"+addFieldTextSize+";"+"-fx-text-fill:"+"#"+ListOfPatterns.get(Number1).get(10).replaceAll("0x", "")+";-fx-background-color:"+"#"+ListOfPatterns.get(Number1).get(12).replaceAll("0x", "")
+									+ ";-fx-opacity:"+ListOfPatterns.get(Number1).get(13)+";-fx-border-width:"+ListOfPatterns.get(Number1).get(14)
+									+";-fx-border-color:"+"#"+ListOfPatterns.get(Number1).get(15).replaceAll("0x", ""));
+					if(buttoninfo.equals("bold")){
+						 ButtonMenu.setFont(Font.font(ListOfPatterns.get(Number1).get(9),FontWeight.BOLD,Integer.parseInt(ListOfPatterns.get(Number1).get(8))));
+					     ButtonMakeOrder.setFont(Font.font(ListOfPatterns.get(Number1).get(9),FontWeight.BOLD,Integer.parseInt(ListOfPatterns.get(Number1).get(8))));
+						 ButtonOrderCondition.setFont(Font.font(ListOfPatterns.get(Number1).get(9),FontWeight.BOLD,Integer.parseInt(ListOfPatterns.get(Number1).get(8))));
+						 ButtonAboutUs.setFont(Font.font(ListOfPatterns.get(Number1).get(9),FontWeight.BOLD,Integer.parseInt(ListOfPatterns.get(Number1).get(8))));
+					}
+					if(buttoninfo.equals("italic")){
+						 ButtonMenu.setFont(Font.font(ListOfPatterns.get(Number1).get(9),FontPosture.ITALIC,Integer.parseInt(ListOfPatterns.get(Number1).get(8))));
+					     ButtonMakeOrder.setFont(Font.font(ListOfPatterns.get(Number1).get(9),FontPosture.ITALIC,Integer.parseInt(ListOfPatterns.get(Number1).get(8))));
+						 ButtonOrderCondition.setFont(Font.font(ListOfPatterns.get(Number1).get(9),FontPosture.ITALIC,Integer.parseInt(ListOfPatterns.get(Number1).get(8))));
+						 ButtonAboutUs.setFont(Font.font(ListOfPatterns.get(Number1).get(9),FontPosture.ITALIC,Integer.parseInt(ListOfPatterns.get(Number1).get(8))));
+					}
+					if(buttoninfo.equals("underlined")){
+						 ButtonMenu.setUnderline(true);
+					     ButtonMakeOrder.setUnderline(true);
+						 ButtonOrderCondition.setUnderline(true);
+						 ButtonAboutUs.setUnderline(true);
+					}
+					}
+					
+				
+			}
+             System.out.println("lDish"+lDish);
+             if(lDish!=null){
+            	 System.out.println(listofdishesnames.size());
+            	for(int p1 = 0;p1<listofdishesnames.size();p1++){
+        	   if(ListOfPatterns.get(Number1).get(0)!=null&&ListOfPatterns.get(Number1).get(1)!=null){
+        		  
+        		   
+        		   
+        		   listofdishesnames.get(p1).setStyle("-fx-font-family:'"+menu+"'"+";"+"-fx-font-size:"+addFieldTextSize+";"+
+        				   "-fx-text-fill:"+"#"+ListOfPatterns.get(Number1).get(2).replaceAll("0x", "")+";-fx-background-color:"+"#"+ListOfPatterns.get(Number1).get(4).replaceAll("0x", "")
+							+ ";-fx-opacity:"+ListOfPatterns.get(Number1).get(5)+";-fx-border-width:"+ListOfPatterns.get(Number1).get(6)
+							+";-fx-border-color:"+"#"+ListOfPatterns.get(Number1).get(7).replaceAll("0x", ""));
+					}
+        	   System.out.println("font"+listofdishesnames.get(p1).getFont().getFamily());
+        	   if(textinfo.equals("bold")){
+        		   listofdishesnames.get(p1).setFont(Font.font(menu,FontWeight.BOLD,addFieldTextSize));
+				}
+				if(textinfo.equals("italic")){
+					listofdishesnames.get(p1).setFont(Font.font(menu,FontPosture.ITALIC,addFieldTextSize));
+				}
+				if(textinfo.equals("underlined")){
+					listofdishesnames.get(p1).setUnderline(true);
+				    
+				}
+           }
+           }  
+          
+           ll.setFixedCellSize(55);
+           ld.setFixedCellSize(55);
+	    
+	    });
+	    }
+
+
+
+
+
+
+
+
+if(redactorList!=null){
+    
+	PatternOpacity.setValue(1);
+	ButtonTextOpacity.setValue(1);
+	System.out.println(Number);
+	redactorPane.setBackground(new Background(startBg));
+	slideNumber=0;
+	addorsafe.setText("Добавить");
+	if(openFromMenu){
+	
+		addorsafe.setText("Сохранить");
+	middleVar=Number;
+	Number=Number1;
+	
+	redactorPane.setBackground(new Background(bgpatterns.get("MainView").get(Number1)));
+	
+	if(ListOfPatterns.get(Number1).get(0)!=null){
+	PatternTextSize.setText(ListOfPatterns.get(Number1).get(0));
+	}
+	if(ListOfPatterns.get(Number1).get(1)!=null){
+	PatternFont.setValue(ListOfPatterns.get(Number1).get(1));
+	}
+	if(ListOfPatterns.get(Number1).get(2)!=null){
+	PatternTextColor.setValue(Color.valueOf(ListOfPatterns.get(Number1).get(2)));
+	}
+	if(ListOfPatterns.get(Number1).get(3)!=null){
+	           if(ListOfPatterns.get(Number1).get(3).equals("bold")){	
+	        		txt1.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+	           }
+	           if(ListOfPatterns.get(Number1).get(3).equals("italic")){
+	        	    txt2.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+	           }
+	           if(ListOfPatterns.get(Number1).get(3).equals("underlined")){ 
+	        		txt3.setStyle("-fx-border-color: black; -fx-border-width: 1;"); 
+	           }
+	}
+	if(ListOfPatterns.get(Number1).get(4)!=null){
+	PatternBackground.setValue(Color.web(ListOfPatterns.get(Number1).get(4)));
+	}
+	if(ListOfPatterns.get(Number1).get(5)!=null){
+	PatternOpacity.setValue(Double.valueOf(ListOfPatterns.get(Number1).get(5)));
+	}
+	if(ListOfPatterns.get(Number1).get(6)!=null){
+	TextBorderSize.setText(ListOfPatterns.get(Number1).get(6));
+	}
+	if(ListOfPatterns.get(Number1).get(7)!=null){
+	TextBorderColor.setValue(Color.valueOf(ListOfPatterns.get(Number1).get(7)));
+	}
+	if(ListOfPatterns.get(Number1).get(8)!=null){
+	ButtonTextSize.setText(ListOfPatterns.get(Number1).get(8));
+	}
+	if(ListOfPatterns.get(Number1).get(9)!=null){
+	ButtonTextFont.setValue(ListOfPatterns.get(Number1).get(9));;
+	}
+	if(ListOfPatterns.get(Number1).get(10)!=null){
+	ButtonTextColor.setValue(Color.valueOf(ListOfPatterns.get(Number1).get(10)));
+	}
+	if(ListOfPatterns.get(Number1).get(11)!=null){
+        if(ListOfPatterns.get(Number1).get(11).equals("bold")){	
+        	Buttontxt1.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+        }
+        if(ListOfPatterns.get(Number1).get(11).equals("italic")){
+        	Buttontxt2.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+        }
+        if(ListOfPatterns.get(Number1).get(11).equals("underlined")){ 
+        	Buttontxt3.setStyle("-fx-border-color: black; -fx-border-width: 1;"); 
+        }
+}
+	if(ListOfPatterns.get(Number1).get(12)!=null){
+	ButtonBackgroundColor.setValue(Color.valueOf(ListOfPatterns.get(Number1).get(12)));
+	}
+	if(ListOfPatterns.get(Number1).get(13)!=null){
+	ButtonTextOpacity.setValue(Double.valueOf(ListOfPatterns.get(Number1).get(13)));
+	}
+	if(ListOfPatterns.get(Number1).get(14)!=null){
+	ButtonBorderSize.setText(ListOfPatterns.get(Number1).get(14));
+	}
+	if(ListOfPatterns.get(Number1).get(15)!=null){
+	ButtonBorderColor.setValue(Color.valueOf(ListOfPatterns.get(Number1).get(15)));
+	}
+	if(ListOfPatterns.get(Number1).get(16)!=null){
+	animationColor.setValue(Color.valueOf(ListOfPatterns.get(Number1).get(16)));
+	}
+	
+	}
+Label l1 = new Label ("     Вид текста     ");
+l1.setFont(new Font(30));
+Label l2 = new Label ("     Вид кнопки     ");
+l2.setFont(new Font(30));
+
+redactorList.getItems().addAll(l1,l2);
+redactorList.setOnMouseClicked(pp->{
+	int val = redactorList.getSelectionModel().selectedIndexProperty().getValue();
+	if(val==0){
+		redac2.setVisible(false);
+		redac2.setDisable(true);
+		redac1.setVisible(true);
+		redac1.setDisable(false);
+	}
+	else if(val==1){
+		redac1.setVisible(false);
+		redac1.setDisable(true);
+		redac2.setVisible(true);
+		redac2.setDisable(false);
+	}
+	});
+}
+if(txt1!=null){
+	  
+    txt1.setOnMouseClicked(pp->{;
+    if(txt1.getStyle().equals("-fx-border-color: black; -fx-border-width: 1;")){
+      textinfo="default";
+      txt1.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+    }
+    else{
+    txt1.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+    txt2.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+    txt3.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+    textinfo="bold";
+    
+    }
+  
+    });
+    txt2.setOnMouseClicked(pp->{;
+    if(txt2.getStyle().equals("-fx-border-color: black; -fx-border-width: 1;")){
+      textinfo="default";
+      txt2.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+    }
+    else{
+    txt1.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+    txt2.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+    txt3.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+    textinfo="italic";
+    
+
+    }
+    
+    });
+    txt3.setOnMouseClicked(pp->{;
+    if(txt3.getStyle().equals("-fx-border-color: black; -fx-border-width: 1;")){
+      textinfo="default";
+      txt3.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+    }
+    else{
+    txt1.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+    txt2.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+    txt3.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+        textinfo="underlined";
+    
+
+    }
+    
+    });
+    
+    
+    Buttontxt1.setOnMouseClicked(pp->{;
+    if(Buttontxt1.getStyle().equals("-fx-border-color: black; -fx-border-width: 1;")){
+      buttoninfo="default";
+      Buttontxt1.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+    }
+    else{
+      Buttontxt1.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+      Buttontxt2.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+      Buttontxt3.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+      buttoninfo="bold";
+    }
+    });
+    Buttontxt2.setOnMouseClicked(pp->{;
+    if(Buttontxt2.getStyle().equals("-fx-border-color: black; -fx-border-width: 1;")){
+      buttoninfo="default";
+      Buttontxt2.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+    }
+    else{
+      Buttontxt1.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+      Buttontxt2.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+      Buttontxt3.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+      buttoninfo="italic";
+    }
+    
+    });
+    Buttontxt3.setOnMouseClicked(pp->{;
+    if(Buttontxt3.getStyle().equals("-fx-border-color: black; -fx-border-width: 1;")){
+      buttoninfo="default";
+      Buttontxt3.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+    }
+    else{
+      Buttontxt1.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+      Buttontxt2.setStyle("-fx-border-color: white; -fx-border-width: 0;");
+      Buttontxt3.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+      buttoninfo="underlined";
+    }
+    });
+    PatternOpacity.setMin(0);
+    PatternOpacity.setMax(1);
+    ButtonTextOpacity.setMin(0);
+    ButtonTextOpacity.setMax(1);
+    for(int i =0;i<fontNames.length;i++){
+      PatternFont.getItems().add(fontNames[i]);
+      ButtonTextFont.getItems().add(fontNames[i]);
+    }
+    
+    animation.setOnAction(oo->{
+      
+      if(animation.isSelected()){
+      animColor.setDisable(false);
+      animationColor.setDisable(false);
+    }
+    else if(!animation.isSelected()){
+      animColor.setDisable(true);
+      animationColor.setDisable(true);
+    }
+    });
+  }
+
+
+
 		
 	}
 	
@@ -1010,6 +1742,534 @@ public void sortTheTebleInformation(){
 	    ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 	    return new javafx.scene.image.Image(in);
 	}
+
+
+
+
+
+public void LabelsAddTest(){
+	InfoPane.setVisible(false);
+	InfoPane.setDisable(true);
+	ld.setVisible(true);	
+	ld.setDisable(false);
+	
+   
+	 
+}
+public void useForAll(){
+	
+	if(bgpatterns.get("MainView").size()>=Number+1){
+	bgpatterns.get("MainView").set(Number, bgImage);	
+	}
+	else{
+		
+		bgpatterns.get("MainView").add(Number, bgImage);
+		
+	}
+	
+	if(bgpatterns.get("Categories").size()>=Number+1){
+	bgpatterns.get("Categories").set(Number, bgImage);	
+	}
+	else{
+		
+		bgpatterns.get("Categories").add(Number, bgImage);
+		
+	}
+	if(bgpatterns.get("Dish").size()>=Number+1){
+	bgpatterns.get("Dish").set(Number, bgImage);	
+	}
+	else{
+		
+			bgpatterns.get("Dish").add(Number, bgImage);
+			
+			
+	}
+	if(bgpatterns.get("DishInfo").size()>=Number+1){
+	bgpatterns.get("DishInfo").set(Number, bgImage);
+	}
+	else{
+		
+			bgpatterns.get("DishInfo").add(Number, bgImage);
+			
+			
+					
+			
+	}
+	System.out.println(bgpatterns);
+}
+
+
+public void slideLeft(){
+	if(slideNumber==1){
+		PatternName.setText("Главный вид");
+	slideNumber = 0;
+	if(bgpatterns.get("MainView").size()>=Number+1){
+		redactorPane.setBackground(new Background(bgpatterns.get("MainView").get(Number)));
+		bgImage=bgpatterns.get("MainView").get(Number);
+	}
+		else{
+			redactorPane.setBackground(new Background(startBg));
+		
+		}
+	
+	}
+	
+	else if(slideNumber==2){
+		PatternName.setText("Категории");
+	slideNumber = 1;
+	if(bgpatterns.get("Categories").size()>=Number+1){
+		redactorPane.setBackground(new Background(bgpatterns.get("Categories").get(Number)));
+		bgImage=bgpatterns.get("Categories").get(Number);
+        
+	}
+		else{
+			redactorPane.setBackground(new Background(startBg));
+			
+		}
+		
+	}
+	else if(slideNumber==3){
+		PatternName.setText("Блюда");
+	slideNumber = 2;
+	if(bgpatterns.get("Dish").size()>=Number+1){
+		redactorPane.setBackground(new Background(bgpatterns.get("Dish").get(Number)));
+		bgImage=bgpatterns.get("Dish").get(Number);
+
+	}
+		else{
+			redactorPane.setBackground(new Background(startBg));
+			
+		}
+	
+	}
+	}
+public void slideRight(){
+	if(slideNumber==0){
+	PatternName.setText("Категории");
+	slideNumber = 1;
+	if(bgpatterns.get("Categories").size()>=Number+1){
+	redactorPane.setBackground(new Background(bgpatterns.get("Categories").get(Number)));
+	bgImage=bgpatterns.get("Categories").get(Number);
+
+	}
+	else{
+		redactorPane.setBackground(new Background(startBg));
+		
+	}
+	
+	}
+	else if(slideNumber==1){
+		PatternName.setText("Блюда");
+	slideNumber = 2;
+	if(bgpatterns.get("Dish").size()>=Number+1){
+		redactorPane.setBackground(new Background(bgpatterns.get("Dish").get(Number)));
+		bgImage=bgpatterns.get("Dish").get(Number);
+
+	}
+		else{
+			redactorPane.setBackground(new Background(startBg));
+			
+		}
+	
+	}
+	else if(slideNumber==2){
+		PatternName.setText("Инф. Блюдо");
+	slideNumber = 3;
+	if(bgpatterns.get("DishInfo").size()>=Number+1){
+		redactorPane.setBackground(new Background(bgpatterns.get("DishInfo").get(Number)));
+		bgImage=bgpatterns.get("DishInfo").get(Number);
+
+	}
+		else{
+			redactorPane.setBackground(new Background(startBg));
+			
+		}
+	}
+}
+public void openRedator(){
+	
+
+
+try {
+	FXMLLoader loader = new FXMLLoader();
+
+	loader.setLocation(MainGUI.class.getResource("redactor.fxml"));
+	
+    rootLayout = (AnchorPane) loader.load();
+	
+    Scene Scene = new Scene(rootLayout);
 	  
+     kk = new Stage();
+	   kk.setScene(Scene);
+	   kk.show();
+} catch (IOException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}
+  
+	
+    
+ 
+}
+public void returnBack(){
+	if(positionNumber==0){
+		ll.setVisible(false);
+	    ll.setDisable(true);
+	    MenuPane.setVisible(true);
+	    MenuPane.setDisable(false);
+	}
+	if(positionNumber==1){
+		ld.setVisible(false);
+	    ld.setDisable(true);
+	    ll.setVisible(true);
+	    ll.setDisable(false);
+	    positionNumber=0;
+	}
+	if(positionNumber==2){
+		InfoPane.setVisible(false);
+		InfoPane.setDisable(true);
+	    ld.setVisible(true);
+	    ld.setDisable(false);
+	    positionNumber=1;
+	}
+
+}
+public void setBGforPattern(){
+	chooseImageForPattern(st1);
+
+	
+	
+}
+
+public void chooseImageForPattern(Stage stage){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose Image");
+        configureFileChooser(fileChooser);
+         Platform.runLater(new Runnable() {
+                  @Override public void run() {
+                    File file = fileChooser.showOpenDialog(stage);
+                    
+              try {
+                
+                
+                String imagepath = file.toURI().toURL().toString();
+                    Image imageforbackground = new Image(imagepath);
+                     bgImage = new BackgroundImage(imageforbackground, 
+                      BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                      BackgroundPosition.DEFAULT, 
+                      new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
+                
+                
+                
+                
+                
+                if(slideNumber==0){  
+                  if(patt1.size()<=Number){
+                  patt1.add(Number,bgImage);
+                  }
+                  else{
+                    patt1.set(Number,bgImage);
+                  }
+                   
+  
+                     redactorPane.setBackground(new Background(bgpatterns.get("MainView").get(Number)));
+                   usAll.setDisable(false);
+                }
+                if(slideNumber==1){  
+                  if(patt2.size()<=Number){
+                    patt2.add(Number,bgImage);
+                    }
+                    else{
+                      patt2.set(Number,bgImage);
+                    }
+                  
+                  redactorPane.setBackground(new Background(bgpatterns.get("Categories").get(Number)));
+                  usAll.setDisable(false);  
+                }
+                if(slideNumber==2){  
+                  if(patt3.size()<=Number){
+                    patt3.add(Number,bgImage);
+                    }
+                    else{
+                      patt3.set(Number,bgImage);
+                    }
+                  
+                  redactorPane.setBackground(new Background(bgpatterns.get("Dish").get(Number)));
+                  usAll.setDisable(false);  
+                }
+                if(slideNumber==3){  
+                  if(patt4.size()<=Number){
+                    patt4.add(Number,bgImage);
+                    }
+                    else{
+                      patt4.set(Number,bgImage);
+                    }
+                  
+                  redactorPane.setBackground(new Background(bgpatterns.get("DishInfo").get(Number)));
+                  usAll.setDisable(false);  
+                }
+                
+                System.out.println(bgpatterns);
+              
+            
+              } catch (MalformedURLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+              }
+              
+              
+              
+                  }});
+      }
+
+
+
+public void changeRedactor(){
+	
+	if(changeRedac.getText().equals("Вид кнопки")){
+	
+		redac1.setVisible(false);
+	redac1.setDisable(true);
+	redac2.setVisible(true);
+	redac2.setDisable(false);
+	changeRedac.setText("Вид текста");
+	}
+	else if(changeRedac.getText().equals("Вид текста")){
+		redac2.setVisible(false);
+		redac2.setDisable(true);
+		redac1.setVisible(true);
+		redac1.setDisable(false);
+		changeRedac.setText("Вид кнопки");	
+	}
+}
+
+public void addPattern(){
+	DropShadow ds = new DropShadow();
+    ds.setOffsetY(2.3);
+    ds.setOffsetX(2.3);
+    ds.setColor(Color.GRAY); 
+    ImageView img = new ImageView();
+	img.setFitHeight(100);
+	img.setFitWidth(100);
+	img.setImage(bgpatterns.get("MainView").get(Number).getImage());
+	img.setEffect(ds);
+	Label patternName = new Label("Pattern№1");
+	patternName.setFont(new Font(30));
+	Label patternFont = new Label("Style:"+ListOfPatterns.get(Number).get(1));
+	patternFont.setFont(new Font(15));
+	Label patternSize = new Label("TextSize:"+ListOfPatterns.get(Number).get(0)+"px");
+	patternSize.setFont(new Font(15));
+	patternName.setStyle("-fx-text-fill:black");
+	patternFont.setStyle("-fx-text-fill:black");
+	patternSize.setStyle("-fx-text-fill:black");
+	Image redacPattern = new Image("img/PattRedac.jpg");
+	Image redacPatternExchange = new Image("img/ImageForAnim.jpg");
+	ImageView imgg = new ImageView();
+	imgg.setImage(redacPattern);
+	imgg.setOnMouseEntered(oo->{
+		imgg.setImage(redacPatternExchange);
+	});
+	imgg.setOnMouseExited(o->{
+		imgg.setImage(redacPattern);
+	});
+	imgg.setOnMouseClicked(ppnn->{
+		Number1=PatternList.getSelectionModel().selectedIndexProperty().getValue();
+		openFromMenu=true;
+		openRedator();
+	
+	});
+	Image closePattern = new Image("img/close.jpg");
+	Image closePatternExchange = new Image("img/ImageCloseForAnim.jpg");
+    ImageView closeim = new ImageView();
+	closeim.setImage(closePattern);
+	closeim.setOnMouseEntered(oo->{
+		closeim.setImage(closePatternExchange);
+	});
+	closeim.setOnMouseExited(o->{
+		closeim.setImage(closePattern);
+	});
+	closeim.setOnMouseClicked(oo1->{
+		
+		
+		int deletePos =PatternList.getSelectionModel().selectedIndexProperty().getValue();
+		if(deletePos==0&&PatternList.getItems().size()==1){
+			PatternList.getItems().remove(deletePos);
+			ListOfPatterns.remove(deletePos);
+			bgpatterns.get("MainView").remove(deletePos);
+	    	bgpatterns.get("Categories").remove(deletePos);
+	    	bgpatterns.get("Dish").remove(deletePos);
+	    	bgpatterns.get("DishInfo").remove(deletePos);
+		Number=deletePos;
+		}
+		else{
+		for(int i = deletePos ;i<PatternList.getItems().size()-1;i++){
+	    	PatternList.getItems().set(i, PatternList.getItems().get(i+1));
+	    	ListOfPatterns.replace(i, ListOfPatterns.get(i+1));
+	    	
+	    	bgpatterns.get("MainView").set(i,bgpatterns.get("MainView").get(i+1));
+	    	bgpatterns.get("Categories").set(i,bgpatterns.get("Categories").get(i+1));
+	    	bgpatterns.get("Dish").set(i,bgpatterns.get("Dish").get(i+1));
+	    	bgpatterns.get("DishInfo").set(i,bgpatterns.get("DishInfo").get(i+1));
+	    	
+	    	
+		}
+		PatternList.getItems().remove(PatternList.getItems().size()-1);
+		bgpatterns.get("MainView").remove(bgpatterns.get("MainView").size()-1);
+    	bgpatterns.get("Categories").remove(bgpatterns.get("Categories").size()-1);
+    	bgpatterns.get("Dish").remove(bgpatterns.get("Dish").size()-1);
+    	bgpatterns.get("DishInfo").remove(bgpatterns.get("DishInfo").size()-1);
+    	Number = PatternList.getItems().size();
+		}
+		});
+	GridPane patternPane = new GridPane();
+	GridPane.setHalignment(img, HPos.LEFT);
+	GridPane.setHalignment(imgg, HPos.RIGHT);
+	GridPane.setHalignment(closeim, HPos.RIGHT);
+	GridPane.setHalignment(patternName, HPos.CENTER);
+	GridPane.setMargin(img, new Insets(0,30,5,0));
+	GridPane.setMargin(imgg, new Insets(50,0,0,130));
+	GridPane.setMargin(closeim, new Insets(0,0,50,130));
+	GridPane.setMargin(patternName, new Insets(0,25,60,0));
+	GridPane.setMargin(patternFont, new Insets(10,0,0,0));
+	GridPane.setMargin(patternSize, new Insets(60,0,0,0));
+	patternPane.add(patternName, 1, 0);
+	patternPane.add(patternFont, 1, 0);
+	patternPane.add(patternSize, 1, 0);
+	patternPane.add(imgg, 2,0 );
+	patternPane.add(closeim, 2,0 );
+	patternPane.getChildren().addAll(img);
+	patternPane.setOnMouseClicked(lll->{
+		patternName.setStyle("-fx-text-fill:black");
+		patternFont.setStyle("-fx-text-fill:black");
+		patternSize.setStyle("-fx-text-fill:black");
+		Number1=PatternList.getSelectionModel().selectedIndexProperty().getValue();
+		 System.out.println(Number1);
+	});
+	
+	if(openFromMenu){
+		
+		
+		PatternList.getItems().set(Number1, patternPane);
+			
+	Number = middleVar;
+	}
+	else{
+		System.out.println("pp"+patternPane.getChildren().toString());
+		PatternList.getItems().add(patternPane);
+	System.out.println("pl"+PatternList.getItems().toString());
+	System.out.println(Number);
+	Number++;	
+	}
+}
+public void addPatterntoList(){
+	if(openFromMenu){
+		
+		ListOfPatterns.get(Number1).set(0,PatternTextSize.getText());
+		ListOfPatterns.get(Number1).set(1,PatternFont.getValue());
+		ListOfPatterns.get(Number1).set(2,PatternTextColor.getValue().toString());
+		ListOfPatterns.get(Number1).set(3,textinfo);
+		ListOfPatterns.get(Number1).set(4,PatternBackground.getValue().toString());
+		ListOfPatterns.get(Number1).set(5,String.format("%.2f", PatternOpacity.getValue()).replace(',','.'));
+		if(TextBorderSize.getText().equals("")){
+			ListOfPatterns.get(Number1).set(6,"0");
+		}
+		else{
+			ListOfPatterns.get(Number1).set(6,TextBorderSize.getText());
+		}
+		ListOfPatterns.get(Number1).set(7,TextBorderColor.getValue().toString());
+		if(ButtonTextSize.getText().equals("")){
+			ListOfPatterns.get(Number1).set(8,"15");
+		}
+		else{
+			ListOfPatterns.get(Number1).set(8,ButtonTextSize.getText());
+		}
+		ListOfPatterns.get(Number1).set(9,ButtonTextFont.getValue());
+		ListOfPatterns.get(Number1).set(10,ButtonTextColor.getValue().toString());
+		ListOfPatterns.get(Number1).set(11,buttoninfo);
+		ListOfPatterns.get(Number1).set(12,ButtonBackgroundColor.getValue().toString());
+		ListOfPatterns.get(Number1).set(13,String.format("%.2f", ButtonTextOpacity.getValue()).replace(',','.'));
+		if(ButtonBorderSize.getText().equals("")){
+			ListOfPatterns.get(Number1).set(14,"0");
+		}
+		else{
+			ListOfPatterns.get(Number1).set(14,ButtonBorderSize.getText());
+		}
+		ListOfPatterns.get(Number1).set(15,ButtonBorderColor.getValue().toString());
+		ListOfPatterns.get(Number1).set(16,animationColor.getValue().toString());
+		System.out.println("00");
+	
+	}
+ 	
+	else{
+		if(bgpatterns.get("MainView").size()==Number){
+			bgpatterns.get("MainView").add(startBg);
+		}
+		if(bgpatterns.get("Categories").size()==Number){
+			bgpatterns.get("Categories").add(startBg);
+		}
+		if(bgpatterns.get("Dish").size()==Number){
+			bgpatterns.get("Dish").add(startBg);
+		}
+		if(bgpatterns.get("DishInfo").size()==Number){
+			bgpatterns.get("DishInfo").add(startBg);
+		}
+		
+		ArrayList<String>al = new ArrayList<>();
+	al.add(PatternTextSize.getText());
+	al.add(PatternFont.getValue());
+	al.add(PatternTextColor.getValue().toString());
+	al.add(textinfo);
+	al.add(PatternBackground.getValue().toString());
+    al.add(String.format("%.2f", PatternOpacity.getValue()).replace(',','.'));
+	if(TextBorderSize.getText().equals("")){
+		al.add("0");
+	}
+	else{
+		 al.add(TextBorderSize.getText());
+	}
+    al.add(TextBorderColor.getValue().toString());
+	if(ButtonTextSize.getText().equals("")){
+		al.add("15");
+	}
+	else{
+		al.add(ButtonTextSize.getText());
+	}
+	al.add(ButtonTextFont.getValue());
+	al.add(ButtonTextColor.getValue().toString());
+	al.add(buttoninfo);
+	al.add(ButtonBackgroundColor.getValue().toString());
+	al.add(String.format("%.2f", ButtonTextOpacity.getValue()).replace(',','.'));
+	if(ButtonBorderSize.getText().equals("")){
+		al.add("0");
+	}
+	else{
+		al.add(ButtonBorderSize.getText());
+	}
+	al.add(ButtonBorderColor.getValue().toString());
+	al.add(animationColor.getValue().toString());
+	ListOfPatterns.put(Number, al);
+	
+	}
+	kk.close();
+	System.out.println(slideNumber);
+	
+	MainGUI mng= loader.getController();
+	System.out.println("3"+loader.toString());
+ 	if(loader!=null){
+ 	mng.addPattern();
+ 	
+ 	}
+	openFromMenu=false;
+	}
+
+
+
+
+
+
+
+
+
+ 
 	
 }

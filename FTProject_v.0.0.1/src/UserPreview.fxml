@@ -26,7 +26,7 @@
          <top>
             <AnchorPane maxWidth="1200.0" prefHeight="550.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
                <children>
-                  <ListView id="topMenu" fx:id="topMenu" layoutX="-2.0" orientation="HORIZONTAL" prefHeight="1.0" prefWidth="1202.0">
+                  <ListView id="topMenu" fx:id="topMenu" layoutX="-20.0" orientation="HORIZONTAL" prefHeight="1.0" prefWidth="1230.0">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>

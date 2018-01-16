@@ -1,95 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@img/style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainGUI">
    <children>
-      <Group fx:id="MainMenuGroup" layoutX="336.0" layoutY="68.0">
+      <ImageView fitHeight="518.0" fitWidth="933.0" layoutX="50.0" layoutY="40.0" opacity="0.63" pickOnBounds="true">
+         <image>
+            <Image url="@img/whitebg.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="496.0" fitWidth="305.0" layoutX="60.0" layoutY="50.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+         <image>
+            <Image url="@img/whitebg.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="498.0" fitWidth="587.0" layoutX="381.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+         <image>
+            <Image url="@img/whitebg.png" />
+         </image>
+      </ImageView>
+      <Group fx:id="MainMenuGroup" layoutX="69.0" layoutY="60.0">
          <children>
-            <ImageView fitHeight="492.0" fitWidth="333.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="441.0" fitWidth="328.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@img/planshet.jpg" />
+                  <Image url="@img/planshet.png" />
                </image>
             </ImageView>
-            <GridPane alignment="TOP_CENTER" layoutX="21.0" layoutY="41.0" prefHeight="403.0" prefWidth="276.0">
+            <GridPane fx:id="MenuPane" layoutX="21.0" layoutY="41.0" prefHeight="359.0" prefWidth="245.0" style="-fx-background-color: white;">
                <children>
-                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#showCategoriesAndDishes" prefHeight="50.0" prefWidth="128.0" text="Меню" GridPane.rowIndex="2">
+                  <Button fx:id="ButtonMenu" alignment="CENTER" mnemonicParsing="false" onAction="#showCategoriesAndDishes" prefHeight="45.0" prefWidth="170.0" text="Меню" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                      <font>
                         <Font size="16.0" />
                      </font>
                      <GridPane.margin>
-                        <Insets left="70.0" />
+                        <Insets bottom="10.0" top="40.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button contentDisplay="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="128.0" text="Сделать &#10;  заказ" GridPane.rowIndex="3">
+                  <Button fx:id="ButtonMakeOrder" mnemonicParsing="false" prefHeight="34.0" prefWidth="170.0" text="Сделать  заказ" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <GridPane.margin>
-                        <Insets left="70.0" />
+                        <Insets bottom="10.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="128.0" text="Состояние&#10;    заказа&#10;" GridPane.rowIndex="4">
+                  <Button fx:id="ButtonOrderCondition" mnemonicParsing="false" prefHeight="34.0" prefWidth="170.0" text="Состояние заказа&#10;" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <GridPane.margin>
-                        <Insets left="70.0" />
+                        <Insets bottom="10.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="128.0" text="О нас" textAlignment="CENTER" GridPane.rowIndex="5">
+                  <Button fx:id="ButtonAboutUs" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="34.0" prefWidth="170.0" text="О нас" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="5">
                      <font>
                         <Font size="16.0" />
                      </font>
                      <GridPane.margin>
-                        <Insets bottom="60.0" left="70.0" />
+                        <Insets bottom="10.0" />
                      </GridPane.margin>
                   </Button>
-                  <Label alignment="CENTER" prefWidth="230.0" text="&quot;Слоган&quot;" GridPane.rowIndex="1">
+                  <Label fx:id="sloganLabel" alignment="CENTER" prefWidth="230.0" text="&quot;Слоган&quot;" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                      <font>
                         <Font size="16.0" />
                      </font>
                      <GridPane.margin>
-                        <Insets left="20.0" />
+                        <Insets top="15.0" />
                      </GridPane.margin>
-                     <padding>
-                        <Insets bottom="20.0" />
-                     </padding>
-                  </Label>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="115.0" prefWidth="275.0" styleClass="label-header" text="Название" wrapText="true">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
                      <padding>
                         <Insets top="10.0" />
                      </padding>
+                  </Label>
+                  <Label fx:id="nameLabel" alignment="CENTER" prefHeight="31.0" prefWidth="247.0" styleClass="label-lowheader" text="Название ресторана" GridPane.halignment="CENTER">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets top="40.0" />
+                     </GridPane.margin>
                   </Label>
                </children>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                </columnConstraints>
                <rowConstraints>
-                  <RowConstraints maxHeight="186.0" minHeight="10.0" prefHeight="57.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="141.0" minHeight="0.0" prefHeight="61.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="157.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="106.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="101.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="117.0" minHeight="10.0" prefHeight="117.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="63.0" minHeight="0.0" prefHeight="24.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="135.0" minHeight="10.0" prefHeight="51.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="164.0" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="157.0" minHeight="10.0" prefHeight="72.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="143.0" minHeight="10.0" prefHeight="47.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="193.0" minHeight="10.0" prefHeight="82.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="135.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                </rowConstraints>
             </GridPane>
+            <ListView fx:id="ll" layoutX="22.0" layoutY="41.0" prefHeight="362.0" prefWidth="246.0" stylesheets="@style2.css" visible="false" />
+            <ListView fx:id="ld" layoutX="22.0" layoutY="41.0" prefHeight="360.0" prefWidth="245.0" stylesheets="@style2.css" visible="false" />
+            <AnchorPane fx:id="InfoPane" disable="true" layoutX="24.0" layoutY="45.0" prefHeight="401.0" prefWidth="276.0" visible="false">
+               <children>
+                  <ImageView fx:id="DishImg" fitHeight="102.0" fitWidth="103.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fitHeight="105.0" fitWidth="225.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@img/whitebg.png" />
+                     </image></ImageView>
+                  <Label fx:id="DishName" layoutX="120.0" layoutY="10.0" prefHeight="64.0" prefWidth="109.0" text="Название блюда" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="DishValue" layoutX="136.0" layoutY="55.0" prefHeight="71.0" prefWidth="128.0" text="Белки/Жиры/Углеводы&#10;" wrapText="true" />
+                  <Label fx:id="DishDescription" layoutX="26.0" layoutY="143.0" prefHeight="125.0" prefWidth="223.0" text="Описание&#10;&#10;&#10;" wrapText="true" />
+                  <Label fx:id="DishIngredients" layoutX="26.0" layoutY="274.0" prefHeight="115.0" prefWidth="100.0" text="Ингредиенты&#10;" wrapText="true" />
+                  <Label fx:id="DishKkal" layoutX="139.0" layoutY="274.0" prefHeight="25.0" prefWidth="109.0" text="Ккал">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="DishPrice" layoutX="138.0" layoutY="326.0" prefHeight="25.0" prefWidth="109.0" text="Цена">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
          </children>
       </Group>
+      <ListView fx:id="PatternList" layoutX="390.0" layoutY="58.0" prefHeight="413.0" prefWidth="565.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" stylesheets="@style4.css" />
+      <Button layoutX="832.0" layoutY="490.0" mnemonicParsing="false" onAction="#openRedator" prefHeight="36.0" prefWidth="124.0" text="Создать">
+         <font>
+            <Font size="15.0" />
+         </font></Button>
+      <Button fx:id="UsePattern" layoutX="693.0" layoutY="492.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="124.0" text="Добавить">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+      <Button layoutX="145.0" layoutY="501.0" mnemonicParsing="false" onAction="#returnBack" prefHeight="25.0" prefWidth="135.0" text="Назад">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

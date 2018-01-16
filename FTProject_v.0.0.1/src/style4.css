@@ -1,0 +1,7 @@
+
+
+.list-cell:selected {
+   -fx-background-color:white;
+   -fx-border-width:3px;
+   -fx-border-color:black;
+}

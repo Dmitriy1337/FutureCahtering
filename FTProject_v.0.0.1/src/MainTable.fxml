@@ -14,7 +14,12 @@
             <Image url="@img/bg.png" />
          </image>
       </ImageView>
-      <TableView fx:id="mainTb" editable="true" layoutX="26.0" layoutY="39.0" prefHeight="462.0" prefWidth="1138.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+      <ImageView fitHeight="544.0" fitWidth="1149.0" layoutX="21.0" layoutY="25.0" opacity="0.45" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+         <image>
+            <Image url="@img/whitebg.png" />
+         </image>
+      </ImageView>
+      <TableView fx:id="mainTb" editable="true" layoutX="26.0" layoutY="39.0" prefHeight="462.0" prefWidth="1127.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
         <columns>
           <TableColumn fx:id="t1" onEditStart="#addDishDialog" prefWidth="105.0" resizable="false" text="Название" />
           <TableColumn fx:id="t2" onEditStart="#addDishDialog" prefWidth="188.0" resizable="false" text="Описание" />
@@ -27,7 +32,8 @@
             <TableColumn fx:id="t9" prefWidth="154.0" resizable="false" text="Блюдо(Изобр.)" />
         </columns>
       </TableView>
-      <Button fx:id="add" layoutX="26.0" layoutY="525.0" mnemonicParsing="false" onAction="#addDishDialog" prefHeight="42.0" prefWidth="145.0" text="Добавить" />
-      <Button layoutX="192.0" layoutY="525.0" mnemonicParsing="false" onAction="#SafeInfo" prefHeight="42.0" prefWidth="141.0" text="Сохранить" />
+      <Button fx:id="add" layoutX="40.0" layoutY="518.0" mnemonicParsing="false" onAction="#addDishDialog" prefHeight="42.0" prefWidth="145.0" text="Добавить" />
+      <Button fx:id="changeButton" layoutX="204.0" layoutY="518.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="145.0" text="Изменить" />
+      <Button fx:id="delete" layoutX="369.0" layoutY="518.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="145.0" text="Удалить" />
    </children>
 </AnchorPane>
