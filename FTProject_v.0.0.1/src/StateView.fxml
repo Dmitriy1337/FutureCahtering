@@ -13,7 +13,7 @@
             <Image url="@img/bg.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="467.0" fitWidth="820.0" layoutX="136.0" layoutY="98.0" opacity="0.68" pickOnBounds="true">
+      <ImageView fitHeight="467.0" fitWidth="720.0" layoutX="136.0" layoutY="98.0" opacity="0.68" pickOnBounds="true">
          <image>
             <Image url="@img/whitebg.png" />
          </image>
@@ -24,6 +24,13 @@
          </image>
       </ImageView>
       <Label layoutX="392.0" layoutY="41.0" styleClass="label-header" stylesheets="@img/style.css" text="Активные устройства" />
-      <ScrollPane fx:id="planshetPane" layoutX="145.0" layoutY="108.0" prefHeight="378.0" prefWidth="800.0" />
+      <ScrollPane fx:id="planshetPane" layoutX="145.0" layoutY="108.0" prefHeight="378.0" prefWidth="697.0" />
+      <TextArea layoutX="901.0" layoutY="98.0" prefHeight="467.0" prefWidth="244.0" />
+      <ImageView fitHeight="40.0" fitWidth="214.0" layoutX="916.0" layoutY="45.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+         <image>
+            <Image url="@img/whitebg.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="933.0" layoutY="42.0" styleClass="label-header" text="Лог событий" />
    </children>
 </AnchorPane>

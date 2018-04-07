@@ -1,23 +1,42 @@
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.Properties;
 import java.util.ResourceBundle;
+
+import javax.imageio.ImageIO;
+
+import org.ini4j.Ini;
+import org.ini4j.InvalidFileFormatException;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,6 +54,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -56,18 +76,20 @@ import javafx.util.Callback;
 
 public class Controller implements Initializable {
 	boolean isFirst = false;
-	static String STATE_WAITING = "Waiting";
-	static String STATE_ORDER = "Order";
-	static String STATE_OFF = "Off";
+	static String STATE_WAITING = "Ожидание";
+	static String STATE_ORDER = "Используется";
+	static String STATE_OFF = "Выключен";
 	
-	static String ORDER_WAITING = "W";
-	static String ORDER_PREPAIRING = "P";
-	static String ORDER_READY = "R";
+	static String ORDER_WAITING = "Заказ_отсутствует";
+	static String ORDER_PREPAIRING = "Заказ готовится";
+	static String ORDER_READY = "Заказ готов";
+	
+	public boolean logIsRunning  = false;
 	
 	String imagepath="";;
 	
-	
-	
+	boolean firstopened = true;
+	Properties prop;
 	Label obname,obslogan,obadress,obphone,obvk,obfb,obinst,obtwi;
 	int counter2 = 0;;
 	int counter = 0;
@@ -83,7 +105,7 @@ public class Controller implements Initializable {
 	static AnchorPane stateView=null;
 	@FXML
 	Label descrName;
-	
+	 Ini ini ;
 	@FXML
 	Label descrText;
 	
@@ -94,7 +116,8 @@ public class Controller implements Initializable {
 	
 	@FXML 
 	ScrollPane planshetPane;
-	
+	@FXML 
+	TextArea log;
 	
 	@FXML 
 	Button confirmButton;
@@ -108,7 +131,7 @@ public class Controller implements Initializable {
 	@FXML 
 	Circle stateCircle;
 	
-	
+	DataBase dataBase = new DataBase();
 	
 	@FXML 
 	Button changeInfo;
@@ -178,13 +201,44 @@ public class Controller implements Initializable {
 	static AnchorPane personOverview;
 	
 	private MainGUI mainApp;
-	
+	//public static final String PATH_TO_PROPERTIES = "src/config.properties";
 	public Controller() {
     }
 
 	
+	public void readSavings(){
+	 
+	        try {
+	         
+	            String state = prop.getProperty("state");
+	           
+	            //печатаем полученные данные в консоль
+	            System.out.println(
+	                    "state: " + state
+	                   
+	            );
+	 
+	        } catch (Exception e) {
+	           // System.out.println("Ошибка в программе: файл " + PATH_TO_PROPERTIES + " не обнаружено");
+	            e.printStackTrace();
+	        }
+	}
+	
+	
 	@FXML
 	public void startUseButtonListener(){
+		
+		Properties prop = new Properties();
+   	 try {
+			prop.load(Controller.class.getResourceAsStream("/config.properties"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		prop.setProperty("state", "1");
+		//prop.st
+		System.out.println("f"+prop.getProperty("state"));
+		
 		
 		initTopMenu();
 		
@@ -194,29 +248,9 @@ public class Controller implements Initializable {
 
 	
 	
-	public void loadToFile(){
-	 try(FileWriter writer = new FileWriter("personalData.txt", false))
-     {
-        // запись всей строки
-         String text = "";
-        
-         for(int i = 0;i<8;i++){
-        	 
-        	 text+=info.get(i)+"-";
-         }
-         
-         writer.write(text);
-       
-          
-         writer.flush();
-     }
-     catch(IOException ex){
-          
-         System.out.println(ex.getMessage());
-     } 
 	
 	
-}
+	
 	
 	public void saveInfo(){
 		
@@ -239,11 +273,11 @@ public class Controller implements Initializable {
             	obname.setText(name.getText());
             	obslogan.setText(slogan.getText());
         		obadress.setText("Адрес:"+adress.getText());
-        		obphone.setText("Телефон:"+phone.getText());
-        		obvk.setText("ВКонтакте:"+vk.getText());
-        		obfb.setText("Facebook:"+fb.getText());
-        		obinst.setText("Instagram:"+inst.getText());
-        		obtwi.setText("Twitter:"+twi.getText());
+        		obphone.setText("Телефон: "+phone.getText());
+        		obvk.setText("ВКонтакте: "+vk.getText());
+        		obfb.setText("Facebook: "+fb.getText());
+        		obinst.setText("Instagram: "+inst.getText());
+        		obtwi.setText("Twitter: "+twi.getText());
           
             
         		 info.set(0,obname.getText());
@@ -253,11 +287,16 @@ public class Controller implements Initializable {
         		 info.set(4,splitString(obvk.getText()));
         		 info.set(5,splitString(obfb.getText()));
         		 info.set(6,splitString(obinst.getText()));
-        		 
+        		 info.set(7,splitString(obtwi.getText()));
         		 System.out.println("cinfo"+obname.getText());
         		 System.out.println("beforewrite"+info.toString());
-             	loadToFile();
-            
+        			try {
+    					dataBase.savePersonalData(obname.getText(), obslogan.getText(), obadress.getText(), obphone.getText(), obvk.getText(), obfb.getText(), obinst.getText(), obtwi.getText());
+    				} catch (IOException e) {
+    					// TODO Auto-generated catch block
+    					e.printStackTrace();
+    				}
+            		 
             }
         });
 		
@@ -296,14 +335,12 @@ public void chooseImageIV(Stage stage,ImageView iv){
 					
 						
 					
-						Image chosenImage = new Image(imagepath);
+						//Image chosenImage = new Image(imagepath);
 						//BackgroundImage backgroundImage = new BackgroundImage( getImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
 						
 						//Background background = new Background(backgroundImage);
 						
 						
-						
-						iv.setImage(chosenImage);
 						
 						
 						
@@ -335,17 +372,20 @@ public void chooseImageIV(Stage stage,ImageView iv){
 		Platform.runLater(new Runnable() {
             @Override public void run() {
             	
+            	//String[]m = getFromFile("personalData.txt").split("-");
+    			
+    			obname = (Label)mainMenu.getChildren().get(6);
+    			obslogan = (Label)mainMenu.getChildren().get(7);
+    			obadress = (Label)mainMenu.getChildren().get(10);
+    	 		obphone = (Label)mainMenu.getChildren().get(11);
+    		    obvk = (Label)mainMenu.getChildren().get(12);
+    			obfb = (Label)mainMenu.getChildren().get(13);
+        		obinst = (Label)mainMenu.getChildren().get(14);
+    		    obtwi = (Label)mainMenu.getChildren().get(15);
+    		// obtwi.setText("Twitter: "+m[7]);
             	
-            	
-            	System.out.println("//"+mainMenu.getChildren().toString());
-            	 obname = (Label)mainMenu.getChildren().get(6);
-        		 obslogan = (Label)mainMenu.getChildren().get(7);
-        		 obadress = (Label)mainMenu.getChildren().get(10);
-        		 obphone = (Label)mainMenu.getChildren().get(11);
-        		 obvk = (Label)mainMenu.getChildren().get(12);
-        		 obfb = (Label)mainMenu.getChildren().get(13);
-        		 obinst = (Label)mainMenu.getChildren().get(14);
-        		 obtwi = (Label)mainMenu.getChildren().get(15);
+            	System.out.println("//"+dialogPane.getChildren().toString());
+            	 
             	
         		 //System.out.println(dialogPane.getChildren().toString());
         		 TextField obname2 =(TextField)dialogPane.getChildren().get(10);
@@ -362,16 +402,16 @@ public void chooseImageIV(Stage stage,ImageView iv){
         		 
         		 obname2.setText(obname.getText());
         		 obslogan2.setText(obslogan.getText());
-        		 obadress2.setText(splitString(obadress.getText()));
-        		 obphone2.setText(splitString(obphone.getText()));
-        		 obvk2.setText(splitString(obvk.getText()));
-        		 obfb2.setText(splitString(obfb.getText()));
-        		 obinst2.setText(splitString(obinst.getText()));
-        		 obtwi2.setText(splitString(obtwi.getText()));
-            	System.out.println("3"+obname.getText());
+        		System.out.println("obadress.getText() "+obadress.getText());
+        		// obadress2.setText(splitString(obadress.getText()));
+        		// obphone2.setText(splitString(obphone.getText()));
+        		// obvk2.setText(splitString(obvk.getText()));
+        		// obfb2.setText(splitString(obfb.getText()));
+        		// obinst2.setText(splitString(obinst.getText()));
+        		// obtwi2.setText(splitString(obtwi.getText()));
+            	//System.out.println("savedData"+obname2.getText());
         		 
-        		
-        		 
+            
             	if(dialogPane.isDisable()){
             		dialogPane.setDisable(false);
                 	dialogPane.setOpacity(1);	
@@ -399,8 +439,9 @@ public void chooseImageIV(Stage stage,ImageView iv){
 	
 	
 	public String splitString(String line){
-		
+		System.out.println(line);
 		String []mass = line.split(":");
+		System.out.println(mass.length);
 		return mass[1];
 	}
 	
@@ -513,6 +554,7 @@ public void chooseImageIV(Stage stage,ImageView iv){
 		});
 		
 		showMainPage();
+		
 	}
 	
 	public void showTablePage(){
@@ -785,6 +827,7 @@ public void showVisualPage(){
 		if(isPr5){
 		 stateView = (AnchorPane) loader.load();//(AnchorPane) FXMLLoader.load(MainGUI.class.getResource("MainPage.fxml"));
 		isPr5 = false;
+		runLog();
 		}   
          // Помещаем сведения об адресатах в центр корневого макета.
        System.out.println(borderPane.toString());
@@ -853,7 +896,7 @@ public void showVisualPage(){
 			
 	           // dialogPane.setC(personOverview);
 		
-			  
+			 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -863,8 +906,55 @@ public void showVisualPage(){
 		
 	}
 	
-	public void setPlanshetState(){
+	public String readFromFile(String name){
+		
+		
+		 try(FileReader reader = new FileReader("name"))
+	     {
+	       String m = "";
+			 // читаем посимвольно
+	         int c;
+	         while((c=reader.read())!=-1){
+	              
+	           m+=(char)(c);
+	         } 
+	         
+	         return m;
+	     }
+	     catch(IOException ex){
+	          
+	         System.out.println(ex.getMessage());
+	     }   
+	return "";
+	}
+	
+	public void runLog(){
+		 log = (TextArea)stateView.getChildren().get(5)	;
+		if(!logIsRunning)
+		{
+		//Создание потока
+		Thread logListenerThread = new Thread(new Runnable()
+		{
+			public void run() //Этот метод будет выполняться в побочном потоке
+			{
+				
+				
+				while(true){
+				
+					log.setText(readFromFile("ava.txt"));
+					
+					
+				}
+				}
 			
+		});
+		logListenerThread.start();	//Запуск потока
+		logIsRunning=true;
+	}
+		
+	}
+	public void setPlanshetState(){
+		System.out.println("created");
 		
 		
 		int connNumber = MainGUI.rs.getConnNumber();
@@ -872,11 +962,11 @@ public void showVisualPage(){
 		
 		System.out.println("connNumber "+connNumber);
 		int fPaneNumber=0;
-		if(connNumber%4==0){
-		 fPaneNumber = connNumber/4;
+		if(connNumber%2==0){
+		 fPaneNumber = connNumber/2;
 		}
 		else{
-			fPaneNumber=(connNumber/4)+1;
+			fPaneNumber=(connNumber/2)+1;
 			
 		}
 		
@@ -888,12 +978,12 @@ public void showVisualPage(){
 		iv2.setFitHeight(150);
 		iv2.setFitWidth(800);
 		
-		Device[][] dList = new Device[4][fPaneNumber];
+		Device[][] dList = new Device[2][fPaneNumber];
 		for(int i = 0;i<fPaneNumber;i++){
-			for(int j = 0;j<4;j++){
-				if(i*4+j<connNumber){
+			for(int j = 0;j<2;j++){
+				if(i*2+j<connNumber){
 					System.out.println("i"+i+"/"+"j"+j);
-					dList[j][i] = new Device((i*4+j),STATE_WAITING,0,ORDER_WAITING);
+					dList[j][i] = new Device((i*2+j),STATE_WAITING,0,ORDER_WAITING);
 				}
 			}
 			
@@ -901,52 +991,55 @@ public void showVisualPage(){
 		System.out.println("size"+dList.length);
 		
 		for(int i = 0;i<fPaneNumber;i++){
-			for(int j = 0;j<4;j++){
+			for(int j = 0;j<2;j++){
 				System.out.println("i"+i+"/"+"j"+j);
-				if(i*4+j<connNumber){
+				if(i*2+j<connNumber){
 				System.out.print(dList[j][i]+" ");
 				}
 				}
 			System.out.println("");
 		}
 		
-		FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainGUI.class.getResource("DevicePane.fxml"));
+		
         
 		
 		
 		GridPane devicePane = new GridPane();
-		devicePane.setHgap(20);
-		devicePane.setVgap(20);
+		devicePane.setHgap(15);
+		devicePane.setVgap(15);
+		
 		
 		for(int i = 0;i<fPaneNumber;i++){
-			for(int j = 0;j<4;j++){
+			for(int j = 0;j<2;j++){
 				if(i*4+j<connNumber){
-					AnchorPane device;
+					AnchorPane device = null;
 					try {
+						FXMLLoader loader = new FXMLLoader();
+				        loader.setLocation(MainGUI.class.getResource("DevicePane.fxml")); 
 						device = (AnchorPane) loader.load();
-						
-						device.setBorder(new Border(new BorderStroke(Color.BLACK, 
-					            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-						Label dName = (Label)device.getChildren().get(1);
-						Label dState = (Label)device.getChildren().get(2);
-						Label dNumber = (Label)device.getChildren().get(3);
-						Circle dCircle = (Circle)device.getChildren().get(4);
-						Button dButton = (Button)device.getChildren().get(5);
-						
-						dName.setText("Устройство № "+dList[j][i].getNumber());
-						dState.setText("Состояние: "+dList[j][i].getState());
-						dNumber.setText("Номер заказа:"+dList[j][i].getOrder()+"/"+dList[j][i].getOrderState());
-						dCircle.setFill(Color.LIME);
-						
-						
-						//device.getChildren().add(new Label(dList[j][i].getState()));
-						devicePane.add(device, j, i, 1, 1);
-					GridPane.setMargin(device, new Insets(10,10,10,10));
-					} catch (IOException e) {
+					} catch (IOException e1) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} ;
+						e1.printStackTrace();
+					}
+					
+					
+					device.setBorder(new Border(new BorderStroke(Color.BLACK, 
+					        BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+					Label dName = (Label)device.getChildren().get(1);
+					Label dState = (Label)device.getChildren().get(2);
+					Label dNumber = (Label)device.getChildren().get(3);
+					Circle dCircle = (Circle)device.getChildren().get(4);
+					Button dButton = (Button)device.getChildren().get(5);
+					
+					dName.setText("Устройство № "+dList[j][i].getNumber());
+					dState.setText("Состояние: "+dList[j][i].getState());
+					dNumber.setText("Номер заказа:"+dList[j][i].getOrder()+"/"+dList[j][i].getOrderState());
+					dCircle.setFill(Color.LIME);
+					
+					
+					//device.getChildren().add(new Label(dList[j][i].getState()));
+					devicePane.add(device, j, i, 1, 1);
+GridPane.setMargin(device, new Insets(10,10,10,10)); ;
 					
 					
 				}
@@ -960,18 +1053,69 @@ public void showVisualPage(){
 		planshetPane.setContent(devicePane);
 		planshetPane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT
 	           , CornerRadii.EMPTY, Insets.EMPTY)));		
+	
+		}
+
+	
+
+	
+	public void writeToFile(String name,String s){
+		
+		 try(FileWriter writer = new FileWriter("name", false))
+	     {
+	        // запись всей строки
+	         String text = s;
+	         writer.write(text);
+	      
+	          
+	         writer.flush();
+	     }
+	     catch(IOException ex){
+	          
+	         System.out.println(ex.getMessage());
+	     } 
 	}
 	
-	
-	
+	public void clean(){
+		writeToFile("ava.txt","");
+	}
+
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+
+		String path = Controller.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		String decodedPath="";
+		try {
+			decodedPath = URLDecoder.decode(path, "UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		System.out.println("путь: "+decodedPath);
 		
 		
 		
-		if(descrName!=null&&descrText!=null){
-		descrName.setText("Описание продукта. Начало работы.");
+		
+		Properties prop = new Properties();
+   	 try {
+			prop.load(Controller.class.getResourceAsStream("/config.properties"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	         
+	         if(descrName!=null&&descrText!=null){
+	        	 
+	        	
+	        	 //readSavings();
+	        	 
+	        	 
+	        
+	 		
+	        	 
+	        	 descrName.setText("Описание продукта. Начало работы.");
 		descrText.setText("Многие клиенты  сталкиваются с проблемой ожидания официанта. Иногда, время,уходящее на обслуживание больше, чем на приготовление. Многие клиенты предпочли бы совершать заказ напрямую без участия официанта. Это приложение позволяет администрировать систему, которая автоматизирует многие процессы в заведении. Настройка программы занимает не более получаса, а администрирование не требует больших затрат времени и усилий.  Для начала стоит заполнить данные о заведени, указать ваши контакты и соц.сети. Вы всегда сможете добавить новую информацию и изменить старую.  ");
 		AnchorPane ap = (AnchorPane)borderPane.getChildren().get(1);
 		RadioButton r1 =(RadioButton)ap.getChildren().get(6) ;
@@ -981,8 +1125,116 @@ public void showVisualPage(){
 		System.out.println("l"+planshetPane);
 		setPlanshetState();
 		}
+		//System.out.println("3"+getStateFromIniFile());
+		System.out.println("h"+prop.getProperty("state"));
+	
 		
-		// TODO Auto-generated method stub
+		if(mainMenu!=null){
+			obname = (Label)mainMenu.getChildren().get(6);
+			obslogan = (Label)mainMenu.getChildren().get(7);
+			obadress = (Label)mainMenu.getChildren().get(10);
+	 		obphone = (Label)mainMenu.getChildren().get(11);
+		    obvk = (Label)mainMenu.getChildren().get(12);
+			obfb = (Label)mainMenu.getChildren().get(13);
+    		obinst = (Label)mainMenu.getChildren().get(14);
+		    obtwi = (Label)mainMenu.getChildren().get(15);
+			try {
+				obname.setText(dataBase.getName());
+				obslogan.setText(dataBase.getSlogan());
+				obadress.setText(dataBase.getAdress());
+				obphone.setText(dataBase.getPhone());
+				obvk.setText(dataBase.getVk());
+				obfb.setText(dataBase.getFb());
+				obinst.setText(dataBase.getInst());
+				obtwi.setText(dataBase.getTwitter());
+			} catch (InvalidFileFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		    
+		}
+		
+		
+		
+		
+		
+		if(borderPane!=null&&prop.getProperty("state").equals("1")){
+		removePreview();
+		
+		ObservableList<String> items =FXCollections.observableArrayList (
+			    "Главная страница", "  Меню  ", "Визуализация меню", "Состояние системы");
+		
+		topMenu.setItems(items);
+		
+		
+		topMenu.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+
+		    @Override
+		    public ListCell<String> call(ListView<String> param) {
+		         cell = new ListCell<String>() {
+
+		            protected void updateItem(String item, boolean empty) {
+		                super.updateItem(item, empty);
+		                if (item != null) {
+		                	cell.setPrefWidth(299);
+		                	cell.setAlignment(Pos.CENTER);
+		                	
+		                	if(counter==1){
+		                		cell.setText("Главная страница");
+		                	
+		                	}
+		                	if(counter==2){
+		                		cell.setText("Меню");
+		                	}
+		                	if(counter==3){
+		                		cell.setText("Визуализация меню");
+		                	}
+		                	if(counter==4){
+		                		cell.setText("Состояние системы");
+		                	}
+		                	
+		                	
+		                	counter++;
+		                	
+		                
+		                }
+		                
+		                
+		                
+		            }
+		        };
+		        return  (ListCell<String>) cell;
+		    }
+
+			
+		});
+		
+		
+		topMenu.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+		    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+		        System.out.println("ListView selection changed from oldValue = " 
+		                + oldValue + " to newValue = " + newValue);
+		    
+		    if(newValue.replace(" ", "").equals("Главнаястраница")){
+		    	System.out.println(newValue.replace(" ", ""));
+		    	listenTopMenu(1);
+		    	
+		    }
+			 if(newValue.replace(" ", "").equals("Меню")){
+				 listenTopMenu(2);    	
+					    }
+			 if(newValue.replace(" ", "").equals("Визуализацияменю")){
+				 listenTopMenu(3);
+			 }
+			 if(newValue.replace(" ", "").equals("Состояниесистемы")){
+				 listenTopMenu(4);
+			 }
+					    
+		    }
+		});showMainPage();}
 		
 	}
 	

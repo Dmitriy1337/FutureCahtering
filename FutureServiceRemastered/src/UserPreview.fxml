@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fx:id="tabPreview" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="601.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+  <content>
+    <AnchorPane fx:id="previewPane" minHeight="0.0" minWidth="0.0" prefHeight="599.0" prefWidth="998.0">
+         <children>
+           
+            <ImageView fx:id="logo" fitHeight="229.0" fitWidth="425.0" layoutX="376.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@logomin.jpg" />
+               </image>
+            </ImageView>
+            
+         </children></AnchorPane>
+  </content>
+</ScrollPane>

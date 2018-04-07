@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="600.0" fitWidth="1000.0" pickOnBounds="true">
+         <image>
+            <Image url="@bg.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="395.0" fitWidth="223.0" layoutX="391.0" layoutY="103.0" pickOnBounds="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);;">
+         <image>
+            <Image url="@wbg.png" />
+         </image>
+      </ImageView>
+      <Group layoutX="403.0" layoutY="116.0">
+         <children>
+            <AnchorPane prefHeight="368.0" prefWidth="200.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="25.0" layoutY="14.0" prefHeight="52.0" prefWidth="151.0" text="Войдите в учетную запись" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font name="XXIICentarRegular" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="37.0" layoutY="87.0" text="Логин или e-mail">
+                     <font>
+                        <Font name="XXIICentarRegular" size="17.0" />
+                     </font>
+                  </Label>
+                  <JFXTextField alignment="TOP_CENTER" layoutX="17.0" layoutY="109.0" maxWidth="168.0" minWidth="159.0" prefHeight="31.0" prefWidth="168.0" text="login">
+                     <cursor>
+                        <Cursor fx:constant="TEXT" />
+                     </cursor>
+                     <font>
+                        <Font name="XXIICentarRegular" size="14.0" />
+                     </font>
+                  </JFXTextField>
+                  <Label layoutX="69.0" layoutY="150.0" prefHeight="34.0" prefWidth="62.0" text="Пароль">
+                     <font>
+                        <Font name="XXIICentarRegular" size="17.0" />
+                     </font>
+                  </Label>
+                  <JFXPasswordField layoutX="16.0" layoutY="167.0" text="12345">
+                     <font>
+                        <Font name="XXIICentarRegular" size="14.0" />
+                     </font>
+                  </JFXPasswordField>
+                  <JFXButton layoutX="37.0" layoutY="319.0" prefHeight="35.0" prefWidth="126.0" style="-fx-background-color: rgb(51,51,255);" text="Войти" textFill="WHITE">
+                     <font>
+                        <Font name="XXIICentarRegular" size="18.0" />
+                     </font>
+                  </JFXButton>
+               </children>
+            </AnchorPane>
+         </children>
+      </Group>
+   </children>
+</AnchorPane>

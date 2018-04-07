@@ -15,6 +15,8 @@ import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 
+import org.ini4j.Ini;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -74,7 +76,7 @@ public class MainGUI extends Application implements Initializable{
 	private AnchorPane root;
 	
 	AnchorPane dialogPane;
-	
+	static File patternImageFile;
 	int  cc = 0;	
 	static ResServer rs;
 	static int middleVar = 0 ;
@@ -83,6 +85,11 @@ public class MainGUI extends Application implements Initializable{
     String fontNames[] = environment.getAvailableFontFamilyNames();
     public Button usAll;
     
+    static public HashMap<String,ArrayList<File>>bgpatternsForSending = new HashMap<>();
+static public ArrayList<File>patt11=new ArrayList<>();
+	static public ArrayList<File>patt22=new ArrayList<>();
+	static public ArrayList<File>patt33=new ArrayList<>();
+	static public ArrayList<File>patt44=new ArrayList<>();
     public AnchorPane redactor;
     public ListView<Label>redactorList;	   
     public Button addorsafe;	    
@@ -151,7 +158,8 @@ static public HashMap<String,ArrayList<BackgroundImage>>bgpatterns = new HashMap
 	public GridPane MenuPane;
 	public Button UsePattern;
 	
-
+	ArrayList<String>listSendToServer = new ArrayList<>();
+	ArrayList<File>listFlSendToServer  = new ArrayList<>();
 	
 	
 	
@@ -386,6 +394,8 @@ public Label DishName,DishValue,DishDescription,DishIngredients,DishKkal,DishPri
 	static ArrayList<Label>listoflbs = new ArrayList<>();
 	static ArrayList<Label>listoflbsDishes = new ArrayList<>();
 	
+	DataBase dataBase = new DataBase();
+	
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -400,11 +410,14 @@ public Label DishName,DishValue,DishDescription,DishIngredients,DishKkal,DishPri
 		showPreview(mainWindowStage);
 		
 		
-				bgpatterns.put("MainView",patt1);  
+					bgpatterns.put("MainView",patt1);  
 				    bgpatterns.put("Categories",patt2);  
 				    bgpatterns.put("Dish",patt3);
 				    bgpatterns.put("DishInfo",patt4);
-
+				    bgpatternsForSending.put("MainView",patt11);  
+				    bgpatternsForSending.put("Categories",patt22);  
+				    bgpatternsForSending.put("Dish",patt33);
+				    bgpatternsForSending.put("DishInfo",patt44);
 				
 				    	loader = new FXMLLoader();
 				        loader.setLocation(MainGUI.class.getResource("MainMenu.fxml"));
@@ -608,17 +621,28 @@ public Label DishName,DishValue,DishDescription,DishIngredients,DishKkal,DishPri
 	    	dhPrice.add(dsh.getDishPrice());//цена
 	    	categIm.add(dsh.getCategImage()); 
 	    	dishIm.add(dsh.getDishImage());	
-	    		counter1++;
-	    		 SafeInfo();
-	    		System.out.println("sizebefore"+dhName.size());
+	    	listSendToServer.add(dsh.getDishName());
+	    	listSendToServer.add(dsh.getDishDescription()); 
+	    	listSendToServer.add(dsh.getDishIngredients());
+	    	listSendToServer.add(dsh.getDishRefer());
+	    	listSendToServer.add(dsh.getDishHValue());
+	    	listSendToServer.add(dsh.getDishKkl()); 
+	    	listSendToServer.add(dsh.getDishPrice());
+	    	listFlSendToServer.add(dsh.getCategImage()); 
+	    	listFlSendToServer.add(dsh.getDishImage());
+	    	rs.sendMenuInfo(listSendToServer,listFlSendToServer,null, null);
+	    	listSendToServer.clear();
+	    	listFlSendToServer.clear();
 	    		adDishStage.close();
-	        	
+	        	SafeInfo();
+	     
+	        	dataBase.saveDishTableData(data);
 	        });
 	        
 	    	
 	       
 	   		
-	   		
+	        
 	   		
 	   		adDishStage.setScene(addDishScene);
 	   		adDishStage.show();
@@ -819,6 +843,8 @@ public void sortTheTebleInformation(){
       }
       
       
+      
+      
      
       public String getFromFile(){
     	  String s = "";
@@ -1003,6 +1029,9 @@ public void sortTheTebleInformation(){
   	
       }
       
+     
+      
+      
       
       
 	@Override
@@ -1010,16 +1039,16 @@ public void sortTheTebleInformation(){
 		
 		
 		
-	
+
 		
 		
 		if(ll!=null){  //ll.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 			
 			
-			String[]m = getFromFile().split("-");
-System.out.println(getFromFile());
-			nameLabel.setText(m[0]);
-		       sloganLabel.setText(m[1]);
+			//String[]m = getFromFile().split("-");
+//System.out.println(getFromFile());
+			//nameLabel.setText(m[0]);
+		    //   sloganLabel.setText(m[1]);
 			
 		       
 		       try {
@@ -1141,6 +1170,11 @@ System.out.println(getFromFile());
 			    if(Dishposition>0){
 			     DishImg.setImage(immDish);
 			     DishName.setText(allMenuCombinedAndSorted.get(position).get(Dishposition-1).get(0));
+			   
+			     DishName.setStyle("-fx-font-family:'"+menu+"'"+";"+"-fx-font-size:"+addFieldTextSize+";"+"-fx-text-fill:"+"#"+ListOfPatterns.get(Number1).get(2).replaceAll("0x", "")+";-fx-background-color:"+"#"+ListOfPatterns.get(Number1).get(4).replaceAll("0x", "")
+							+ ";-fx-opacity:"+ListOfPatterns.get(Number1).get(5)+";-fx-border-width:"+ListOfPatterns.get(Number1).get(6)
+							+";-fx-border-color:"+"#"+ListOfPatterns.get(Number1).get(7).replaceAll("0x", ""));
+			     
 			     DishValue.setText(allMenuCombinedAndSorted.get(position).get(Dishposition-1).get(4));
 			     DishDescription.setText(allMenuCombinedAndSorted.get(position).get(Dishposition-1).get(1));
 			     DishIngredients.setText(allMenuCombinedAndSorted.get(position).get(Dishposition-1).get(2));
@@ -1217,8 +1251,18 @@ System.out.println(getFromFile());
 		t9.setCellValueFactory(
 	            new PropertyValueFactory<Dish,File>("dishImage")
 	        );
-        mainTb.setItems(data);
+        
+		//System.out.println("dataBase.getDishNumber()"+dataBase.getDishNumber());
+	//	for(int i = 0;i<dataBase.getDishNumber();i++){
+			
+			//data.add(new Dish(dataBase.getDishElement("name", i),dataBase.getDishElement("description", i),dataBase.getDishElement("ingridients", i),dataBase.getDishElement("category", i),dataBase.getDishElement("bju", i) , dataBase.getDishElement("calory", i) ,dataBase.getDishElement("price", i), new File(dataBase.getDishElement("image", i)),new File(dataBase.getDishElement("cimage", i))    ));
+	//	}
+		
+		//System.out.println("dataAfterLoadingFromFile"+data.toString());
+		mainTb.setItems(data);
 	
+		
+		
         mainTb.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 selectedDish = newSelection;
@@ -1243,7 +1287,8 @@ System.out.println(getFromFile());
 	}		
 		
 	if(PatternList!=null){
-	
+		File file1 = new File("pattern4.jpg");
+		File file2 = new File("pattern5.jpg");
     
 	Image expattern1 = new Image("img/pattern4.jpg");		
 		BackgroundImage exapmlePattern1 = new BackgroundImage(expattern1, 
@@ -1261,7 +1306,13 @@ System.out.println(getFromFile());
 	    bgpatterns.get("Categories").add(Number, exapmlePattern2);
 	    bgpatterns.get("Dish").add(Number, exapmlePattern2);
 	    bgpatterns.get("DishInfo").add(Number, exapmlePattern2);
+	    bgpatternsForSending.get("MainView").add(Number,file1);
+	    bgpatternsForSending.get("Categories").add(Number,file2);		
+	    bgpatternsForSending.get("Dish").add(Number,file2);
+	    bgpatternsForSending.get("DishInfo").add(Number,file2);
+	    
 	    ArrayList<String> al = new ArrayList<>();
+	    
 	    al.add("15");
 		al.add("Impact");
 		al.add("000000");
@@ -1368,9 +1419,9 @@ System.out.println(getFromFile());
 	    		GridPane.setHalignment(imgg, HPos.RIGHT);
 	    		GridPane.setHalignment(closeim, HPos.RIGHT);
 	    		GridPane.setHalignment(patternName1, HPos.CENTER);
-	    		GridPane.setMargin(imgg, new Insets(50,0,0,130));
+	    		GridPane.setMargin(imgg, new Insets(70,5,0,250));
 	    		GridPane.setMargin(img1, new Insets(0,30,5,0));
-	    		GridPane.setMargin(closeim, new Insets(0,0,50,130));
+	    		GridPane.setMargin(closeim, new Insets(0,5,40,250));
 	    		GridPane.setMargin(patternName1, new Insets(0,25,60,0));
 	    		GridPane.setMargin(patternFont1, new Insets(10,0,0,0));
 	    		GridPane.setMargin(patternSize1, new Insets(60,0,0,0));
@@ -1756,47 +1807,61 @@ public void LabelsAddTest(){
    
 	 
 }
+
+public void sendPatternToServer(){
+	ArrayList<File>al = new ArrayList<>();
+	al.add(bgpatternsForSending.get("MainView").get(Number1));
+	al.add(bgpatternsForSending.get("Categories").get(Number1));
+	al.add(bgpatternsForSending.get("Dish").get(Number1));
+	al.add(bgpatternsForSending.get("DishInfo").get(Number1));
+	rs.sendMenuInfo(null,null,ListOfPatterns.get(Number1), al);
+}
+
 public void useForAll(){
-	
 	if(bgpatterns.get("MainView").size()>=Number+1){
 	bgpatterns.get("MainView").set(Number, bgImage);	
+	bgpatternsForSending.get("MainView").set(Number, patternImageFile);
 	}
 	else{
 		
 		bgpatterns.get("MainView").add(Number, bgImage);
-		
+		bgpatternsForSending.get("MainView").add(Number, patternImageFile);
 	}
 	
 	if(bgpatterns.get("Categories").size()>=Number+1){
 	bgpatterns.get("Categories").set(Number, bgImage);	
+	bgpatternsForSending.get("Categories").set(Number, patternImageFile);
 	}
 	else{
 		
 		bgpatterns.get("Categories").add(Number, bgImage);
-		
+		bgpatternsForSending.get("Categories").add(Number, patternImageFile);
 	}
 	if(bgpatterns.get("Dish").size()>=Number+1){
 	bgpatterns.get("Dish").set(Number, bgImage);	
+	bgpatternsForSending.get("Dish").set(Number, patternImageFile);
 	}
 	else{
 		
 			bgpatterns.get("Dish").add(Number, bgImage);
-			
+			bgpatternsForSending.get("Dish").add(Number, patternImageFile);
+
 			
 	}
 	if(bgpatterns.get("DishInfo").size()>=Number+1){
 	bgpatterns.get("DishInfo").set(Number, bgImage);
+	bgpatternsForSending.get("DishInfo").set(Number, patternImageFile);
 	}
 	else{
 		
 			bgpatterns.get("DishInfo").add(Number, bgImage);
-			
+			bgpatternsForSending.get("DishInfo").add(Number, patternImageFile);
+
 			
 					
 			
 	}
-	System.out.println(bgpatterns);
-}
+	System.out.println(bgpatterns);}
 
 
 public void slideLeft(){
@@ -1941,86 +2006,91 @@ public void setBGforPattern(){
 	
 }
 
-public void chooseImageForPattern(Stage stage){
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose Image");
-        configureFileChooser(fileChooser);
-         Platform.runLater(new Runnable() {
-                  @Override public void run() {
-                    File file = fileChooser.showOpenDialog(stage);
-                    
-              try {
-                
-                
-                String imagepath = file.toURI().toURL().toString();
-                    Image imageforbackground = new Image(imagepath);
-                     bgImage = new BackgroundImage(imageforbackground, 
-                      BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                      BackgroundPosition.DEFAULT, 
-                      new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
-                
-                
-                
-                
-                
-                if(slideNumber==0){  
-                  if(patt1.size()<=Number){
-                  patt1.add(Number,bgImage);
-                  }
-                  else{
-                    patt1.set(Number,bgImage);
-                  }
-                   
-  
-                     redactorPane.setBackground(new Background(bgpatterns.get("MainView").get(Number)));
-                   usAll.setDisable(false);
-                }
-                if(slideNumber==1){  
-                  if(patt2.size()<=Number){
-                    patt2.add(Number,bgImage);
-                    }
-                    else{
-                      patt2.set(Number,bgImage);
-                    }
-                  
-                  redactorPane.setBackground(new Background(bgpatterns.get("Categories").get(Number)));
-                  usAll.setDisable(false);  
-                }
-                if(slideNumber==2){  
-                  if(patt3.size()<=Number){
-                    patt3.add(Number,bgImage);
-                    }
-                    else{
-                      patt3.set(Number,bgImage);
-                    }
-                  
-                  redactorPane.setBackground(new Background(bgpatterns.get("Dish").get(Number)));
-                  usAll.setDisable(false);  
-                }
-                if(slideNumber==3){  
-                  if(patt4.size()<=Number){
-                    patt4.add(Number,bgImage);
-                    }
-                    else{
-                      patt4.set(Number,bgImage);
-                    }
-                  
-                  redactorPane.setBackground(new Background(bgpatterns.get("DishInfo").get(Number)));
-                  usAll.setDisable(false);  
-                }
-                
-                System.out.println(bgpatterns);
-              
-            
-              } catch (MalformedURLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-              }
-              
-              
-              
-                  }});
-      }
+public void chooseImageForPattern(Stage stage){		FileChooser fileChooser = new FileChooser();
+	fileChooser.setTitle("Choose Image");
+	configureFileChooser(fileChooser);
+	 Platform.runLater(new Runnable() {
+          @Override public void run() {
+          	File file = fileChooser.showOpenDialog(stage);
+          	patternImageFile = file;
+				try {
+					
+					
+					String imagepath = file.toURI().toURL().toString();
+					    Image imageforbackground = new Image(imagepath);
+					     bgImage = new BackgroundImage(imageforbackground, 
+						    BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+						    BackgroundPosition.DEFAULT, 
+						    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true));
+					
+					
+					
+					if(slideNumber==0){  
+						if(patt1.size()<=Number){
+						patt1.add(Number,bgImage);
+						patt11.add(patternImageFile);
+						}
+						else{
+							patt1.set(Number,bgImage);
+							patt11.set(Number,patternImageFile);
+						}
+						
+						 
+
+					     redactorPane.setBackground(new Background(bgpatterns.get("MainView").get(Number)));
+					   
+					}
+					if(slideNumber==1){  
+						if(patt2.size()<=Number){
+							patt2.add(Number,bgImage);
+							patt22.add(patternImageFile);
+						}
+							else{
+								patt2.set(Number,bgImage);
+								patt22.add(patternImageFile);
+							}
+						
+						redactorPane.setBackground(new Background(bgpatterns.get("Categories").get(Number)));
+							
+					}
+					if(slideNumber==2){  
+						if(patt3.size()<=Number){
+							patt3.add(Number,bgImage);
+							patt33.add(patternImageFile);
+						}
+							else{
+								patt3.set(Number,bgImage);
+								patt33.add(patternImageFile);
+							}
+						
+						redactorPane.setBackground(new Background(bgpatterns.get("Dish").get(Number)));
+						
+					}
+					if(slideNumber==3){  
+						if(patt4.size()<=Number){
+							patt4.add(Number,bgImage);
+							patt44.add(patternImageFile);
+						}
+							else{
+								patt4.set(Number,bgImage);
+								patt44.add(patternImageFile);
+							}
+						
+						redactorPane.setBackground(new Background(bgpatterns.get("DishInfo").get(Number)));
+							
+					}
+					
+					System.out.println(bgpatterns);
+				
+			
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				
+          }});}
 
 
 

@@ -113,7 +113,7 @@
             </GridPane>
             <ListView fx:id="ll" layoutX="22.0" layoutY="41.0" prefHeight="362.0" prefWidth="246.0" stylesheets="@style2.css" visible="false" />
             <ListView fx:id="ld" layoutX="22.0" layoutY="41.0" prefHeight="360.0" prefWidth="245.0" stylesheets="@style2.css" visible="false" />
-            <AnchorPane fx:id="InfoPane" disable="true" layoutX="24.0" layoutY="45.0" prefHeight="401.0" prefWidth="276.0" visible="false">
+            <AnchorPane fx:id="InfoPane" disable="true" layoutX="24.0" layoutY="45.0" prefHeight="389.0" prefWidth="236.0" visible="false">
                <children>
                   <ImageView fx:id="DishImg" fitHeight="102.0" fitWidth="103.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fitHeight="105.0" fitWidth="225.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true">
@@ -143,7 +143,7 @@
          </children>
       </Group>
       <ListView fx:id="PatternList" layoutX="390.0" layoutY="58.0" prefHeight="413.0" prefWidth="565.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" stylesheets="@style4.css" />
-      <Button layoutX="832.0" layoutY="490.0" mnemonicParsing="false" onAction="#openRedator" prefHeight="36.0" prefWidth="124.0" text="Создать">
+      <Button layoutX="832.0" layoutY="492.0" mnemonicParsing="false" onAction="#openRedator" prefHeight="36.0" prefWidth="124.0" text="Создать">
          <font>
             <Font size="15.0" />
          </font></Button>
@@ -157,5 +157,12 @@
             <Font size="14.0" />
          </font>
       </Button>
+   <Button layoutX="561.0" layoutY="492.0" mnemonicParsing="false" onAction="#sendPatternToServer" prefHeight="36.0" prefWidth="124.0" text="Отправить">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
    </children>
+
+
 </AnchorPane>

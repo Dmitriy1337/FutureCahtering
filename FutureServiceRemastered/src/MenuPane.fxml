@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="800.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="85.0" prefHeight="39.0" prefWidth="91.0" text="Меню">
+         <font>
+            <Font name="XXIICentarRegular" size="36.0" />
+         </font>
+      </Label>
+      <ScrollPane layoutY="98.0" prefHeight="701.0" prefWidth="260.0">
+         <content>
+            <AnchorPane prefHeight="636.0" prefWidth="260.0" />
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
